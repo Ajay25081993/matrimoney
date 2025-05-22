@@ -36,19 +36,19 @@ if (config.seedDB) { require('./models/Seed'); }
 //routers
 app.use('/auth',authRouter)
 app.use('/user',authMiddleware, userRouter)
-app.use('/infos', infosRouter);
-app.use('/verified', verifiedRouter);
-app.use('/likes', likesRouter);
-app.use('/dislikes', dislikesRouter);
-app.use('/blocks', blocksRouter);
-app.use('/reports', reportsRouter);
-app.use('/connection', connectionRouter);
-app.use('/visits', visitsRouter);
-app.use('/photos', photosRouter);
-app.use('/messages', messagesRouter);
-app.use('/settings', settingsRouter);
-app.use('/notifs', notifsRouter);
-app.use('/interests', interestsRouter);
+app.use('/infos',authMiddleware,infosRouter);
+app.use('/verified',authMiddleware, verifiedRouter);
+app.use('/likes',authMiddleware, likesRouter);
+app.use('/dislikes',authMiddleware, dislikesRouter);
+app.use('/blocks',authMiddleware, blocksRouter);
+app.use('/reports',authMiddleware, reportsRouter);
+app.use('/connection',authMiddleware, connectionRouter);
+app.use('/visits',authMiddleware, visitsRouter);
+app.use('/photos',authMiddleware, photosRouter);
+app.use('/messages',authMiddleware, messagesRouter);
+app.use('/settings',authMiddleware, settingsRouter);
+app.use('/notifs',authMiddleware, notifsRouter);
+app.use('/interests',authMiddleware, interestsRouter);
 
 //to create server and start on port
 app.listen(port, () => {
