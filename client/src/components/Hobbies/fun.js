@@ -1,0 +1,16 @@
+export const fun = [
+  { icon: "movie", title: "Movies" },
+  { icon: "music_note", title: "Music" },
+  { icon: "flight_takeoff", title: "Travelling" },
+  { icon: "menu_book", title: "Reading" },
+  { icon: "sports_soccer", title: "Sports" },
+  { icon: "public", title: "Social media" },
+  { icon: "sports_esports", title: "Gaming" },
+  { icon: "tv", title: "Binge-watching" },
+  { icon: "pedal_bike", title: "Biking" },
+  { icon: "nightlife", title: "Clubbing" },
+  { icon: "shopping_bag", title: "Shopping" },
+  { icon: "theaters", title: "Theater & Events" },
+  { icon: "animation", title: "Anime" },
+  { icon: "mic_external_on", title: "Stand ups" },
+];

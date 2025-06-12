@@ -1,0 +1,22 @@
+export const location = [
+  "Mumbai",
+  "Moradabad",
+  "Meerut",
+  "Mangalore",
+  "Mathura",
+  "Delhi",
+  "Dehradun",
+  "Dharamshala",
+  "Darjeeling",
+  "Dwarka",
+  "Pune",
+  "Patna",
+  "Panipat",
+  "Pondicherry",
+  "Chennai",
+  "Chandigarh",
+  "Coimbatore",
+  "Cuttack",
+  "Hyderabad",
+  "Haldwani"
+];
