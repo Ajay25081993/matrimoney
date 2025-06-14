@@ -1,24 +1,18 @@
-const express = require('express');
-const { body, param, validationResult } = require('express-validator');
-const verifiedRouter = express.Router();
-const { successResponse, errorResponse } = require('../helper/responseHelper');
-const { Verified, User } = require('../models/Schemas');
+import express from 'express';
+import { successResponse, errorResponse } from '../helper/responseHelper.js';
+import { Verified, User } from '../models/Schemas.js';
+import validate from '../middleware/validateRequest.js';
+import {
+  createVerificationValidator,
+  getVerificationValidator,
+  updateVerificationValidator,
+  deleteVerificationValidator
+} from '../validators/verifiedValidator.js';
 
-// Middleware
-const handleValidationErrors = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return errorResponse(res, "Validation error", errors.array(), 422);
-  }
-  next();
-};
+const verifiedRouter = express.Router();
 
 // Create Verification Entry
-verifiedRouter.post('/add', [
-  body('user_id').isInt().withMessage('user_id must be an integer'),
-  body('verified').isBoolean().withMessage('verified must be a boolean'),
-  handleValidationErrors
-], async (req, res) => {
+verifiedRouter.post('/add', createVerificationValidator, validate, async (req, res) => {
   try {
     const { user_id, verified } = req.body;
     const record = await Verified.create({ user_id, verified });
@@ -30,10 +24,7 @@ verifiedRouter.post('/add', [
 });
 
 // Get Verification Status by User ID
-verifiedRouter.get('/:user_id', [
-  param('user_id').isInt().withMessage('user_id must be an integer'),
-  handleValidationErrors
-], async (req, res) => {
+verifiedRouter.get('/:user_id', getVerificationValidator, validate, async (req, res) => {
   try {
     const record = await Verified.findOne({
       where: { user_id: req.params.user_id },
@@ -50,11 +41,7 @@ verifiedRouter.get('/:user_id', [
 });
 
 // Update Verification Status
-verifiedRouter.put('/:user_id', [
-  param('user_id').isInt().withMessage('user_id must be an integer'),
-  body('verified').isBoolean().withMessage('verified must be a boolean'),
-  handleValidationErrors
-], async (req, res) => {
+verifiedRouter.put('/:user_id', updateVerificationValidator, validate, async (req, res) => {
   try {
     const record = await Verified.findOne({ where: { user_id: req.params.user_id } });
 
@@ -71,10 +58,7 @@ verifiedRouter.put('/:user_id', [
 });
 
 // Delete Verification Entry
-verifiedRouter.delete('/:user_id', [
-  param('user_id').isInt().withMessage('user_id must be an integer'),
-  handleValidationErrors
-], async (req, res) => {
+verifiedRouter.delete('/:user_id', deleteVerificationValidator, validate, async (req, res) => {
   try {
     const record = await Verified.findOne({ where: { user_id: req.params.user_id } });
 
@@ -88,4 +72,4 @@ verifiedRouter.delete('/:user_id', [
   }
 });
 
-module.exports = verifiedRouter;
+export default verifiedRouter;

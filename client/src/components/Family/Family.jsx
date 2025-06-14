@@ -6,14 +6,7 @@ import Select from "@mui/material/Select";
 import FormHelperText from "@mui/material/FormHelperText";
 import { motherOption, fatherOption, number } from "./option";
 
-const Family = ({currentStep ,setCurrentStep}) => {
-  const [familyDetails, setFamilyDetails] = useState({
-    mother: "",
-    father: "",
-    sister: "",
-    brother: "",
-  });
-
+const Family = ({ formData, setFormData,handleSubmit }) => {
   const [touched, setTouched] = useState({
     mother: false,
     father: false,
@@ -23,25 +16,69 @@ const Family = ({currentStep ,setCurrentStep}) => {
 
   const [isValid, setIsValid] = useState(false);
 
+  const requiredFields = ["mother", "father", "sister", "brother"];
+
+  // Validate form on every relevant state change
+ const validateForm = (updatedFormData) => {
+  const isAllFilled = requiredFields.every(
+    (field) => updatedFormData[field] !== "" && updatedFormData[field] !== null && updatedFormData[field] !== undefined
+  );
+  setIsValid(isAllFilled);
+};
+
+
+  // Handle input change
   const handleChange = (field) => (event) => {
     const newValue = event.target.value;
-    const updatedDetails = { ...familyDetails, [field]: newValue };
-    setFamilyDetails(updatedDetails);
-
-    const isAllFilled = Object.values(updatedDetails).every(
-      (val) => val !== ""
-    );
-    setIsValid(isAllFilled);
+    const updatedFormData = { ...formData, [field]: newValue };
+    setFormData(updatedFormData);
+    validateForm(updatedFormData);
   };
 
+  // Handle input blur (touched)
   const handleBlur = (field) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
+    validateForm(formData);
   };
 
   const onNext = () => {
-    setCurrentStep((prev)=>prev+1)
-    console.log("Family Details:", familyDetails);
+    handleSubmit()
+    
   };
+
+  // Reusable select field component
+  const renderSelectField = (label, field, options) => (
+    <FormControl
+      variant="standard"
+      sx={{ m: 1, minWidth: 300 }}
+      error={touched[field] && formData[field] === ""}
+    >
+      <InputLabel
+        sx={{ fontSize: "17px", fontWeight: 500 }}
+        id={`${field}-label`}
+      >
+        {label}
+      </InputLabel>
+      <Select
+        labelId={`${field}-label`}
+        value={formData[field]}
+        onChange={handleChange(field)}
+        onBlur={() => handleBlur(field)}
+      >
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
+        {options.map((option, index) => (
+          <MenuItem key={index} value={option}>
+            {option}
+          </MenuItem>
+        ))}
+      </Select>
+      {touched[field] && formData[field] === "" && (
+        <FormHelperText>Please select {label}</FormHelperText>
+      )}
+    </FormControl>
+  );
 
   return (
     <div className="mt-30 mb-10 w-full flex-col gap-4 flex justify-center items-center">
@@ -50,141 +87,22 @@ const Family = ({currentStep ,setCurrentStep}) => {
           <i className="ri-group-3-line text-purple-500 w-20 h-20 text-5xl text-shadow-md text-shadow-purple-400 flex justify-center items-center bg-purple-200 rounded-full"></i>
         </div>
         <p className="text-2xl font-semibold">Add family details</p>
-        {/* Mother's Details */}
-        <FormControl
-          variant="standard"
-          sx={{ m: 1, minWidth: 300 }}
-          error={touched.mother && familyDetails.mother === ""}
-        >
-          <InputLabel
-            sx={{ fontSize: "15px", fontWeight: 600 }}
-            id="mother-detail-label"
-          >
-            Mother's Details
-          </InputLabel>
-          <Select
-            labelId="mother-detail-label"
-            value={familyDetails.mother}
-            onChange={handleChange("mother")}
-            onBlur={() => handleBlur("mother")}
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {motherOption.map((option, index) => (
-              <MenuItem key={index} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-          {touched.mother && familyDetails.mother === "" && (
-            <FormHelperText>Please select Mother's detail</FormHelperText>
-          )}
-        </FormControl>
 
-        {/* Father's Details */}
-        <FormControl
-          variant="standard"
-          sx={{ m: 1, minWidth: 300 }}
-          error={touched.father && familyDetails.father === ""}
-        >
-          <InputLabel
-            sx={{ fontSize: "15px", fontWeight: 600 }}
-            id="father-detail-label"
-          >
-            Father's Details
-          </InputLabel>
-          <Select
-            labelId="father-detail-label"
-            value={familyDetails.father}
-            onChange={handleChange("father")}
-            onBlur={() => handleBlur("father")}
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {fatherOption.map((option, index) => (
-              <MenuItem key={index} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-          {touched.father && familyDetails.father === "" && (
-            <FormHelperText>Please select Father's detail</FormHelperText>
-          )}
-        </FormControl>
-
-        {/* No of Sisters */}
-        <FormControl
-          variant="standard"
-          sx={{ m: 1, minWidth: 300 }}
-          error={touched.sister && familyDetails.sister === ""}
-        >
-          <InputLabel
-            sx={{ fontSize: "15px", fontWeight: 600 }}
-            id="sister-detail-label"
-          >
-            No. of Sisters
-          </InputLabel>
-          <Select
-            labelId="sister-detail-label"
-            value={familyDetails.sister}
-            onChange={handleChange("sister")}
-            onBlur={() => handleBlur("sister")}
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {number.map((option, index) => (
-              <MenuItem key={index} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-          {touched.sister && familyDetails.sister === "" && (
-            <FormHelperText>Please select number of sisters</FormHelperText>
-          )}
-        </FormControl>
-
-        {/* No of Brothers */}
-        <FormControl
-          variant="standard"
-          sx={{ m: 1, minWidth: 300 }}
-          error={touched.brother && familyDetails.brother === ""}
-        >
-          <InputLabel
-            sx={{ fontSize: "15px", fontWeight: 600 }}
-            id="brother-detail-label"
-          >
-            No. of Brothers
-          </InputLabel>
-          <Select
-            labelId="brother-detail-label"
-            value={familyDetails.brother}
-            onChange={handleChange("brother")}
-            onBlur={() => handleBlur("brother")}
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {number.map((option, index) => (
-              <MenuItem key={index} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-          {touched.brother && familyDetails.brother === "" && (
-            <FormHelperText>Please select number of brothers</FormHelperText>
-          )}
-        </FormControl>
+        {/* Form Fields */}
+        {renderSelectField("Mother's Details", "mother", motherOption)}
+        {renderSelectField("Father's Details", "father", fatherOption)}
+        {renderSelectField("No. of Sisters", "sister", number)}
+        {renderSelectField("No. of Brothers", "brother", number)}
 
         {/* Continue Button */}
         <div className="w-full flex justify-center">
           <button
             disabled={!isValid}
             onClick={onNext}
-            className={`cursor-pointer px-8 py-3 rounded-full w-1/3 text-2xl text-white font-semibold text-shadow-xs text-shadow-black ${
-              isValid ? "bg-green-500" : "bg-gray-400 cursor-not-allowed"
+            className={`cursor-pointer px-8 py-3 rounded-full w-1/3 text-2xl  font-semibold  ${
+              isValid
+                ? "bg-purple-200 text-purple-500"
+                : "bg-gray-200 text-white cursor-not-allowed"
             }`}
           >
             Continue

@@ -21,7 +21,7 @@ const Options = ({
                   setShowDegrees(false);
                 }}
                 key={index}
-                className="p-1 rounded-md hover:bg-sky-400 cursor-pointer"
+                className="px-2 py-1 bg-gray-200 border-1 border-gray-300 rounded-md hover:bg-sky-400 cursor-pointer"
               >
                 {option}
               </p>

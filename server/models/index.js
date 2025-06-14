@@ -1,8 +1,5 @@
 "use strict";
-
-const Sequelize = require("sequelize");
-var Schemas = require("./Schemas");
-let db = {};
-db = Schemas;
-db.Sequelize = Sequelize;
-module.exports = db;
+import { Sequelize } from "sequelize";
+import * as Schemas from "./Schemas.js";
+const db = { ...Schemas, Sequelize };
+export default db;

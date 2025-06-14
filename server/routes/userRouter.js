@@ -1,25 +1,19 @@
-const express = require('express');
-const { body, param, validationResult } = require('express-validator');
-const userRouter = express.Router();
-const { successResponse, errorResponse } = require('../helper/responseHelper');
-const { User, Info } = require('../models/Schemas');
+import express from 'express';
+import { successResponse, errorResponse } from '../helper/responseHelper.js';
+import { User, Info } from '../models/Schemas.js';
+import validate from '../middleware/validateRequest.js';
+import {
+  createUserValidator,
+  getUserByIdValidator,
+  updateUserValidator,
+  deleteUserValidator
+} from '../validators/userValidator.js';
+import { updateProfile } from '../controllers/auth.controller.js';
 
-// Middleware
-const handleValidationErrors = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return errorResponse(res, "Validation error", errors.array(), 422);
-  }
-  next();
-};
+const userRouter = express.Router();
 
 // Create User
-userRouter.post('/add', [
-  body('username').notEmpty().withMessage('Username is required'),
-  body('email').isEmail().withMessage('Valid email is required'),
-  body('password').notEmpty().withMessage('Password is required'),
-  handleValidationErrors
-], async (req, res) => {
+userRouter.post('/add', createUserValidator, validate, async (req, res) => {
   try {
     const { username, email, password } = req.body;
     const user = await User.create({ username, email, password });
@@ -42,10 +36,7 @@ userRouter.get('/list', async (req, res) => {
 });
 
 // Get User by ID
-userRouter.get('/:user_id', [
-  param('user_id').isInt().withMessage('user_id must be an integer'),
-  handleValidationErrors
-], async (req, res) => {
+userRouter.get('/:user_id', getUserByIdValidator, validate, async (req, res) => {
   try {
     const user = await User.findOne({
       where: { id: req.params.user_id },
@@ -61,13 +52,7 @@ userRouter.get('/:user_id', [
 });
 
 // Update User
-userRouter.put('/:user_id', [
-  param('user_id').isInt().withMessage('user_id must be an integer'),
-  body('username').optional().isLength({ min: 2 }),
-  body('email').optional().isEmail(),
-  body('password').optional().isLength({ min: 6 }),
-  handleValidationErrors
-], async (req, res) => {
+userRouter.put('/:user_id', updateUserValidator, validate, async (req, res) => {
   try {
     const user = await User.findOne({ where: { id: req.params.user_id } });
     if (!user) return successResponse(res, "User not found", [], 200);
@@ -83,10 +68,7 @@ userRouter.put('/:user_id', [
 });
 
 // Delete User
-userRouter.delete('/:user_id', [
-  param('user_id').isInt().withMessage('user_id must be an integer'),
-  handleValidationErrors
-], async (req, res) => {
+userRouter.delete('/:user_id', deleteUserValidator, validate, async (req, res) => {
   try {
     const user = await User.findOne({ where: { id: req.params.user_id } });
     if (!user) return successResponse(res, "User not found", [], 200);
@@ -99,4 +81,6 @@ userRouter.delete('/:user_id', [
   }
 });
 
-module.exports = userRouter;
+userRouter.put("/update-profile", updateProfile);
+
+export default userRouter;

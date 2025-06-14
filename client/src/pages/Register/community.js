@@ -1,4 +1,5 @@
 export const communities = [
+  "Others",
   "Gujarati",
   "Marathi",
   "Hindi",
@@ -34,5 +35,4 @@ export const communities = [
   "Anglo Indian",
   "Parsi",
   "Jewish",
-  "Others"
 ];

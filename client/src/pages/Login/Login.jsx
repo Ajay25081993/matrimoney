@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Logo from "../../assets/loginLogo.png";
 
-const Login = ({ showLogin, setShowLogin }) => {
+const Login = ({ showLogin, setShowLogin,setShowRegister }) => {
   // 👇 State for inputs
   const [formData, setFormData] = useState({
     email: "",
@@ -16,6 +16,11 @@ const Login = ({ showLogin, setShowLogin }) => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const openRegister = () => {
+    setShowRegister(true)
+    setShowLogin(false)
   };
 
   // 👇 Handle login button click
@@ -102,7 +107,10 @@ const Login = ({ showLogin, setShowLogin }) => {
 
         <div className="flex justify-center items-center">
           <p>New to Shaadi?</p>
-          <div className="px-1 font-semibold text-sm text-gray-500 flex text-center justify-center items-center hover:rounded-full hover:bg-gray-100 cursor-pointer">
+          <div
+            onClick={() => openRegister()}
+            className="px-1 font-semibold text-sm text-gray-500 flex text-center justify-center items-center hover:rounded-full hover:bg-gray-100 cursor-pointer"
+          >
             <p>Sign Up Free</p>
             <i className="ri-arrow-right-s-line text-xl mt-1"></i>
           </div>

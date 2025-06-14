@@ -9,29 +9,30 @@ import { maritalStatus } from "./maritalStatus";
 import { children } from "./Children";
 import { Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
-const ProfileCreation = () => {
-  const [formData, setFormData] = useState({
-    city: "",
-    liveWithFamily: "",
-    maritalStatus: "",
-    hasChildren: "",
-    diet: "",
-    height: "",
-    subCommunity: "",
-    casteNoBar: false,
-  });
+import { weights } from "./weights";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import { languages } from "./language";
+const ProfileCreation = ({ formData, setFormData }) => {
   const navigateTo = useNavigate();
   const [touched, setTouched] = useState({});
   const [isValid, setIsValid] = useState(false);
-
   useEffect(() => {
-    const { city, liveWithFamily, maritalStatus, diet, height, subCommunity } =
-      formData;
+    const {
+      language,
+      city,
+      liveWithFamily,
+      maritalStatus,
+      diet,
+      height,
+      hasChildren,
+      subCommunity,
+    } = formData;
     if (
       city &&
+      language.length &&
       liveWithFamily &&
-      maritalStatus &&
+      (maritalStatus === "Never married" || hasChildren) &&
       diet &&
       height &&
       subCommunity
@@ -48,18 +49,48 @@ const ProfileCreation = () => {
   };
 
   const onNext = () => {
-    console.log("Profile Data Submitted:", formData);
-
     navigateTo(`/profile-creation/step/2`);
-    // API call or navigation here
   };
 
-  const showError = (field) => !formData[field] && touched[field];
+  const showError = (field) => !formData[field]?.length && touched[field];
 
   return (
     <div className="mt-30 mb-10 w-full flex-col gap-4 flex justify-center items-center">
       <div className="shadow-sm shadow-gray-600 bg-white w-3xl rounded-md flex justify-center items-center gap-4 flex-col p-5">
         <p className="text-2xl">Let's create your profile now</p>
+        <Stack
+          spacing={3}
+          sx={{ width: 440, "& .MuiInputLabel-root": { fontSize: "18px" } }}
+        >
+          <Autocomplete
+            multiple
+            id="tags-standard"
+            options={languages}
+            value={formData.language}
+            onChange={(event, newValue) => {
+              setFormData((prev) => ({ ...prev, language: newValue }));
+              setTouched((prev) => ({ ...prev, language: true }));
+            }}
+            getOptionLabel={(option) => option.title}
+            renderInput={(params) => (
+              <TextField
+                helperText={
+                  showError("language")
+                    ? "Please select at least one language"
+                    : ""
+                }
+                error={showError("language")}
+                {...params}
+                variant="standard"
+                label="Languages Known(Choose your mother tongue first)"
+                placeholder={
+                  formData.language?.length ? "" : "Select languages"
+                }
+              />
+            )}
+          />
+        </Stack>
+
         <Box
           component="form"
           sx={{
@@ -72,14 +103,20 @@ const ProfileCreation = () => {
           <div className="flex justify-center items-center flex-col gap-5">
             {/* City */}
             <TextField
-              error={showError("city")}
+              error={showError("city") || (formData.city.length < 4 && formData.city.length!=0)}
               required
               label="City you live in?"
               value={formData.city}
               onChange={(e) => handleChange("city", e.target.value)}
               onBlur={() => setTouched((prev) => ({ ...prev, city: true }))}
               variant="standard"
-              helperText={showError("city") ? "Please enter your city" : ""}
+              helperText={
+                showError("city")
+                  ? "Please enter your city"
+                  : formData.city.length < 4&& formData.city.length!=0
+                  ? "City name must be at least 4 characters"
+                  : ""
+              }
             />
 
             {/* Live with Family */}
@@ -90,8 +127,10 @@ const ProfileCreation = () => {
                   <div
                     key={option}
                     onClick={() => handleChange("liveWithFamily", option)}
-                    className={`hover:bg-gray-200 cursor-pointer px-2 py-1 flex justify-center items-center h-8 border-1 rounded-full border-gray-300 ${
-                      formData.liveWithFamily === option ? "bg-gray-400" : ""
+                    className={`hover:bg-sky-200 hover:text-black cursor-pointer px-2 py-1 flex justify-center items-center h-8 border-1 rounded-full border-gray-300 ${
+                      formData.liveWithFamily === option
+                        ? "bg-sky-500 text-white"
+                        : ""
                     }`}
                   >
                     {option}
@@ -138,8 +177,10 @@ const ProfileCreation = () => {
                       <div
                         key={index}
                         onClick={() => handleChange("hasChildren", type)}
-                        className={`hover:bg-gray-200 cursor-pointer px-2 py-1 flex justify-center items-center h-8 border-1 rounded-full border-gray-300 ${
-                          formData.hasChildren === type ? "bg-gray-400" : ""
+                        className={`hover:bg-sky-200 hover:text-black cursor-pointer px-2 py-1 flex justify-center items-center h-8 border-1 rounded-full border-gray-300 ${
+                          formData.hasChildren === type
+                            ? "bg-sky-500 text-white"
+                            : ""
                         }`}
                       >
                         {type}
@@ -162,8 +203,8 @@ const ProfileCreation = () => {
                   <div
                     key={index}
                     onClick={() => handleChange("diet", type)}
-                    className={`hover:bg-gray-200 cursor-pointer px-2 py-1 flex justify-center items-center h-8 border-1 rounded-full border-gray-300 ${
-                      formData.diet === type ? "bg-gray-400" : ""
+                    className={`hover:bg-sky-200 hover:text-black cursor-pointer px-2 py-1 flex justify-center items-center h-8 border-1 rounded-full border-gray-300 ${
+                      formData.diet === type ? "bg-sky-500 text-white" : ""
                     }`}
                   >
                     {type}
@@ -191,6 +232,28 @@ const ProfileCreation = () => {
               }
             >
               {heights.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </TextField>
+
+            {/* Weight */}
+            <TextField
+              error={showError("weight")}
+              select
+              required
+              label="Your weight"
+              value={formData.weight}
+              onChange={(e) => handleChange("weight", e.target.value)}
+              onBlur={() => setTouched((prev) => ({ ...prev, weight: true }))}
+              slotProps={{ select: { native: true } }}
+              variant="standard"
+              helperText={
+                showError("weight") ? "Please select your weight" : ""
+              }
+            >
+              {weights.map((option) => (
                 <option key={option} value={option}>
                   {option}
                 </option>
@@ -242,8 +305,10 @@ const ProfileCreation = () => {
             onClick={() => {
               onNext();
             }}
-            className={`cursor-pointer px-8 py-3 rounded-full w-1/3 text-2xl text-white font-semibold text-shadow-xs text-shadow-black ${
-              isValid ? "bg-green-500" : "bg-gray-400 cursor-not-allowed"
+            className={`cursor-pointer px-8 py-3 rounded-full w-1/3 text-2xl  font-semibold  ${
+              isValid
+                ? "bg-sky-300 text-sky-700"
+                : "bg-gray-200 text-white cursor-not-allowed"
             }`}
           >
             Continue

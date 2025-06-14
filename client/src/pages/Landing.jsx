@@ -25,8 +25,13 @@ const Landing = () => {
       />
       <Middle showRegister={showRegister} setShowRegister={setShowRegister} />
       <SuccessStory />
-      <Footer showRegister={showRegister} setShowRegister={setShowRegister}/>
-      <Login showLogin={showLogin} setShowLogin={setShowLogin} />
+      <Footer showRegister={showRegister} setShowRegister={setShowRegister} />
+      <Login
+        showLogin={showLogin}
+        setShowLogin={setShowLogin}
+        showRegister={showRegister}
+        setShowRegister={setShowRegister}
+      />
       <Register showRegister={showRegister} setShowRegister={setShowRegister} />
       {/* <Hero /> */}
       {/* <Message />

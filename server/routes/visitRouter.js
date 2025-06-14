@@ -1,24 +1,17 @@
-const express = require('express');
-const { body, param, validationResult } = require('express-validator');
-const visitRouter = express.Router();
-const { successResponse, errorResponse } = require('../helper/responseHelper');
-const { Visit, User } = require('../models/Schemas');
+import express from 'express';
+import { successResponse, errorResponse } from '../helper/responseHelper.js';
+import { Visit, User } from '../models/Schemas.js';
+import validate from '../middleware/validateRequest.js';
+import {
+  createVisitValidator,
+  getVisitedValidator,
+  getVisiterValidator
+} from '../validators/visitValidator.js';
 
-// Middleware for validation errors
-const handleValidationErrors = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return errorResponse(res, "Validation error", errors.array(), 422);
-  }
-  next();
-};
+const visitRouter = express.Router();
 
 // Record a Visit
-visitRouter.post('/add', [
-  body('visiter_id').isInt().withMessage('visiter_id must be an integer'),
-  body('visited_id').isInt().withMessage('visited_id must be an integer'),
-  handleValidationErrors
-], async (req, res) => {
+visitRouter.post('/add', createVisitValidator, validate, async (req, res) => {
   try {
     const { visiter_id, visited_id } = req.body;
 
@@ -36,10 +29,7 @@ visitRouter.post('/add', [
 });
 
 // Get Visits Made to a User
-visitRouter.get('/visited/:user_id', [
-  param('user_id').isInt().withMessage('user_id must be an integer'),
-  handleValidationErrors
-], async (req, res) => {
+visitRouter.get('/visited/:user_id', getVisitedValidator, validate, async (req, res) => {
   try {
     const visits = await Visit.findAll({
       where: { visited_id: req.params.user_id },
@@ -54,10 +44,7 @@ visitRouter.get('/visited/:user_id', [
 });
 
 // Get Visits Made by a User
-visitRouter.get('/visiter/:user_id', [
-  param('user_id').isInt().withMessage('user_id must be an integer'),
-  handleValidationErrors
-], async (req, res) => {
+visitRouter.get('/visiter/:user_id', getVisiterValidator, validate, async (req, res) => {
   try {
     const visits = await Visit.findAll({
       where: { visiter_id: req.params.user_id },
@@ -71,4 +58,4 @@ visitRouter.get('/visiter/:user_id', [
   }
 });
 
-module.exports = visitRouter;
+export default visitRouter;

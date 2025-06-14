@@ -1,32 +1,98 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { Loader } from "lucide-react";
+
 import Landing from "./pages/Landing";
-import CreateProfile from "./pages/Profile Creation/CreateProfile";
-import AboutMe from "./pages/About Me/AboutMe";
-import UploadPhoto from "./pages/Upload Photo/UploadPhoto";
-import Hobby from "./pages/Hobbies&Interests/Hobby";
-import Inbox from "./pages/Inbox/Inbox";
-import FamilyDetails from "./pages/FamilyDetails/FamilyDetails";
-import Home from "./pages/Home/Home";
-import ProfilePreview from "./pages/Profile Preview/ProfilePreview";
+// import { useAuthStore } from "./store/useAuthStore";
+import PrivateRoute from "./components/Private Route/PrivateRoute";
+import { privateRoutes } from "./components/Private Route/privateRoutes";
+
+// Lazy loaded pages
+const Home = lazy(() => import("./pages/Home/Home"));
+const FamilyDetails = lazy(() => import("./pages/FamilyDetails/FamilyDetails"));
+const UploadPhoto = lazy(() => import("./pages/Upload Photo/UploadPhoto"));
+const Hobby = lazy(() => import("./pages/Hobbies&Interests/Hobby"));
+const ProfilePreview = lazy(() =>
+  import("./pages/Profile Preview/ProfilePreview")
+);
+const CreateProfile = lazy(() =>
+  import("./pages/Profile Creation/CreateProfile")
+);
+const Inbox = lazy(() => import("./pages/Inbox/Inbox"));
 const App = () => {
+  // const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const componentsMap = {
+    Home,
+    FamilyDetails,
+    UploadPhoto,
+    Hobby,
+    ProfilePreview,
+    CreateProfile,
+    Inbox,
+  };
+  // useEffect(() => {
+  //   checkAuth();
+  // }, [checkAuth]);
+
+  // if (isCheckingAuth && !authUser)
+  //   return (
+  //     <div className="flex items-center justify-center h-screen">
+  //       <Loader className="size-10 animate-spin" />
+  //     </div>
+  //   );
   return (
     <div>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/about-me" element={<AboutMe />} />
-        <Route path="/family-details" element={<FamilyDetails />} />
-        <Route path="/upload-photo" element={<UploadPhoto />} />
-        <Route path="/hobby-interest" element={<Hobby />} />
-        <Route path="/profile-preview" element={<ProfilePreview />} />
-        <Route path="/inbox" element={<Inbox />} />
-
-        <Route
-          path="/profile-creation/step/:step"
-          element={<CreateProfile />}
-        />
-      </Routes>
+      <ToastContainer />
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center h-screen">
+            <Loader className="size-10 animate-spin" />
+          </div>
+        }
+      >
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          {privateRoutes.map(({ path, component }) => {
+            const Component = componentsMap[component];
+            if (path === "/profile-creation/about-me")
+              return (
+                <Route
+                  key={path}
+                  path={path}
+                  element={
+                    <PrivateRoute>
+                      <Component steps={"about-me"} />
+                    </PrivateRoute>
+                  }
+                />
+              );
+            if (path === "/profile-creation/family-details")
+              return (
+                <Route
+                  key={path}
+                  path={path}
+                  element={
+                    <PrivateRoute>
+                      <Component steps={"family-details"} />
+                    </PrivateRoute>
+                  }
+                />
+              );
+            return (
+              <Route
+                key={path}
+                path={path}
+                element={
+                  <PrivateRoute>
+                    <Component />
+                  </PrivateRoute>
+                }
+              />
+            );
+          })}
+        </Routes>
+      </Suspense>
     </div>
   );
 };

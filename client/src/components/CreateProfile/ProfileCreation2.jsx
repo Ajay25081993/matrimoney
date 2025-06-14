@@ -8,17 +8,8 @@ import Options from "./Options";
 import { professionCategoriesData } from "./proffesion";
 import { monthlyIncome, yearlyIncome } from "./income";
 import { useNavigate } from "react-router-dom";
-const ProfileCreation2 = () => {
-  const [formData, setFormData] = useState({
-    highestQualification: "",
-    college: "",
-    workWith: "",
-    workAs: "",
-    monthlyIncome: "",
-    yearlyIncome: "",
-  });
+const ProfileCreation2 = ({ formData, setFormData }) => {
   const navigateTo = useNavigate();
-
   const [touched, setTouched] = useState({});
   const [isValid, setIsValid] = useState(false);
   const [showDegrees, setShowDegrees] = useState(false);
@@ -42,9 +33,8 @@ const ProfileCreation2 = () => {
     } = formData;
     if (
       highestQualification &&
-      workWith &&
+      (workWith === "Not Working" || workAs) &&
       college &&
-      workAs &&
       selectIncome.monthly
         ? monthlyIncome
         : yearlyIncome
@@ -77,10 +67,8 @@ const ProfileCreation2 = () => {
     setTouched((prev) => ({ ...prev, [field]: true }));
   };
 
-  const onNext = (e) => {
-    e.preventDefault();
-    console.log("Profile Data Submitted:", formData);
-    navigateTo(`/about-me`);
+  const onNext = () => {
+    navigateTo(`/profile-creation/about-me`);
     // API call or navigation here
   };
 
@@ -104,25 +92,6 @@ const ProfileCreation2 = () => {
           <div className="flex justify-center items-center flex-col gap-4">
             {/* Qualification */}
             <div>
-              {/* <TextField
-                onFocus={() => setShowDegrees(true)}
-                error={showError("highestQualification")}
-                required
-                label="Your highest qualification"
-                value={formData.highestQualification}
-                onBlur={() =>
-                  setTouched((prev) => ({
-                    ...prev,
-                    highestQualification: true,
-                  }))
-                }
-                variant="standard"
-                helperText={
-                  showError("highestQualification")
-                    ? "Please select your qualification"
-                    : ""
-                }
-              /> */}
               <TextField
                 error={showError("highestQualification")}
                 required
@@ -180,7 +149,7 @@ const ProfileCreation2 = () => {
             {/* College Name */}
             {formData.highestQualification && (
               <TextField
-                error={showError("college")}
+                error={showError("college") || formData.college.length < 10&&formData.college.length!=0}
                 required
                 label="Your college name(Highest degree)"
                 placeholder="Enter your college name"
@@ -191,7 +160,11 @@ const ProfileCreation2 = () => {
                 }
                 variant="standard"
                 helperText={
-                  showError("college") ? "Please enter your college name" : ""
+                  showError("city")
+                    ? "Please enter your city"
+                    : formData.college.length < 10&&formData.college.length!=0
+                    ? "College name must be at least 10 characters"
+                    : ""
                 }
                 className=""
               />
@@ -213,7 +186,7 @@ const ProfileCreation2 = () => {
               />
 
               {showWorkWith && (
-                <div className="bg-gray-200 shadow-md shadow-gray-500 rounded-md w-full overflow-auto h-50 ml-2 px-1">
+                <div className="bg-gray-200 shadow-md shadow-gray-500 rounded-md w-full overflow-auto  ml-2 px-1 py-2">
                   <div className="space-y-2">
                     {workWith.map((type, index) => {
                       return (
@@ -223,7 +196,7 @@ const ProfileCreation2 = () => {
                             setShowWorkWith(false);
                           }}
                           key={index}
-                          className="p-1 rounded-md hover:bg-sky-400 cursor-pointer"
+                          className="px-2 py-1 bg-gray-200 border-1 border-gray-300 rounded-md hover:bg-sky-400 cursor-pointer"
                         >
                           {type}
                         </p>
@@ -233,23 +206,29 @@ const ProfileCreation2 = () => {
                 </div>
               )}
             </div>
+
             {/* Work As */}
-            <div>
-              <TextField
-                error={showError("workAs")}
-                required
-                label="As"
-                value={formData.workAs}
-                onChange={(e) => {
-                  handleChange("workAs", e.target.value);
-                  setSearchTerm(e.target.value);
-                  setShowProffesion(true);
-                }}
-                onBlur={() => setTouched((prev) => ({ ...prev, workAs: true }))}
-                variant="standard"
-                helperText={showError("workAs") ? "Please select one" : ""}
-              />
-              {/* {showProffesion && (
+
+            {formData.workWith && formData.workWith !== "Not Working" && (
+              <div>
+                <TextField
+                  error={showError("workAs")}
+                  required
+                  label="As"
+                  value={formData.workAs}
+                  onChange={(e) => {
+                    handleChange("workAs", e.target.value);
+                    setSearchTerm(e.target.value);
+                    setShowProffesion(true);
+                  }}
+                  onBlur={() =>
+                    setTouched((prev) => ({ ...prev, workAs: true }))
+                  }
+                  variant="standard"
+                  helperText={showError("workAs") ? "Please select one" : ""}
+                />
+
+                {/* {showProffesion && (
                 <div className="bg-gray-200 shadow-md shadow-gray-500 rounded-md w-full overflow-auto h-50 ml-2 px-1">
                   {professionCategoriesData.map((profession) => {
                     return (
@@ -264,21 +243,22 @@ const ProfileCreation2 = () => {
                   })}
                 </div>
               )} */}
-              {showProffesion && (
-                <div className="bg-gray-200 shadow-md shadow-gray-500 rounded-md w-full overflow-auto h-50 ml-2 p-1">
-                  {filteredJobPost.map((profession, index) => (
-                    <Options
-                      key={index}
-                      category={profession.category}
-                      proffesion={profession.professions}
-                      handleChange={handleChange}
-                      field={"workAs"}
-                      setShowDegrees={setShowProffesion}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+                {showProffesion && (
+                  <div className="bg-gray-200 shadow-md shadow-gray-500 rounded-md w-full overflow-auto h-50 ml-2 p-1">
+                    {filteredJobPost.map((profession, index) => (
+                      <Options
+                        key={index}
+                        category={profession.category}
+                        proffesion={profession.professions}
+                        handleChange={handleChange}
+                        field={"workAs"}
+                        setShowDegrees={setShowProffesion}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Company Name */}
             {formData.workAs && (
@@ -286,7 +266,7 @@ const ProfileCreation2 = () => {
                 error={showError("company")}
                 required
                 label="Your company name(current)"
-                placeholder="Enter your college name"
+                placeholder="Enter your company name"
                 value={formData.company}
                 onChange={(e) => handleChange("company", e.target.value)}
                 onBlur={() =>
@@ -296,13 +276,13 @@ const ProfileCreation2 = () => {
                 helperText={
                   showError("company") ? "Please enter your company name" : ""
                 }
-                className=""
+                
               />
             )}
 
             <div className=" w-full">
               <div className="ml-2  flex w-full items-center justify-between">
-                <p>Your income*</p>
+                <p className="text-xl text-gray-700">Your income*</p>
                 <div className="flex items-center w-35 justify-between bg-gray-200 rounded-full">
                   <div className="flex w-35 items-center justify-center">
                     <div
@@ -394,7 +374,7 @@ const ProfileCreation2 = () => {
                   className=""
                 />
                 {showIncome && selectIncome.monthly && (
-                  <div className="bg-gray-200 shadow-md shadow-gray-500 rounded-md w-full overflow-auto h-50 ml-2 px-1">
+                  <div className="bg-gray-200 shadow-md shadow-gray-500 rounded-md w-full overflow-auto h-50 ml-2 px-1 py-2">
                     <Options
                       category={""}
                       proffesion={monthlyIncome}
@@ -405,7 +385,7 @@ const ProfileCreation2 = () => {
                   </div>
                 )}
                 {showIncome && selectIncome.yearly && (
-                  <div className="bg-gray-200 shadow-md shadow-gray-500 rounded-md w-full overflow-auto h-50 ml-2 px-1">
+                  <div className="bg-gray-200 shadow-md shadow-gray-500 rounded-md w-full overflow-auto h-50 ml-2 px-1 py-2">
                     <Options
                       category={""}
                       proffesion={yearlyIncome}
@@ -429,8 +409,10 @@ const ProfileCreation2 = () => {
           <button
             disabled={!isValid}
             onClick={(e) => onNext(e)}
-            className={`cursor-pointer px-8 py-3 rounded-full w-1/3 text-2xl text-white font-semibold text-shadow-xs text-shadow-black ${
-              isValid ? "bg-green-500" : "bg-gray-400 cursor-not-allowed"
+            className={`cursor-pointer px-8 py-3 rounded-full w-1/3 text-2xl  font-semibold  ${
+              isValid
+                ? "bg-sky-300 text-sky-700"
+                : "bg-gray-200 text-white cursor-not-allowed"
             }`}
           >
             Create Profile

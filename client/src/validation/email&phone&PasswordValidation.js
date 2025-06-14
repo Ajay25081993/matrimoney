@@ -1,10 +1,15 @@
 import * as Yup from "yup";
+
 export const contact = Yup.object().shape({
   email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
+    .required("Email is required")
+    .test(
+      "valid-email-format",
+      "Invalid email address",
+      (value) => !!value && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+    ),
 
-  phone: Yup.string()
+  phoneNo: Yup.string()
     .required("Phone number is required")
     .test(
       "valid-phone-format",
@@ -26,4 +31,16 @@ export const contact = Yup.object().shape({
 
       return true;
     }),
+
+  password: Yup.string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .max(20, "Password cannot be more than 20 characters")
+    .matches(/[A-Z]/, "Password must have at least one uppercase letter")
+    .matches(/[a-z]/, "Password must have at least one lowercase letter")
+    .matches(/\d/, "Password must have at least one number")
+    .matches(
+      /[@$!%*?&#^()_+\-=[\]{};':"\\|,.<>/?]/,
+      "Password must have at least one special character"
+    ),
 });

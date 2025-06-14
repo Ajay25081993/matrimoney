@@ -7,5 +7,5 @@ export const workWith = [
 
   "Business / Self Employed",
 
-  "Not Working",
+  "Not Working",
 ];

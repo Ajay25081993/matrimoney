@@ -7,17 +7,17 @@ import { communities } from "./community";
 
 export default function Form2({ onNext, onBack, userData, setUserData }) {
   // Example for enabling/disabling button based on selections — you can enhance this with validation logic later
-  const isValid = userData.religion && userData.community && userData.state;
+  const isValid = userData.religion!=="Others" && userData.community!=='Others' && userData.state;
 
   return (
     <div className="">
       <i
         onClick={onBack}
-        className="ri-arrow-left-long-line text-3xl cursor-pointer text-gray-500"
+        className="ri-arrow-left-long-line text-2xl cursor-pointer text-gray-500"
       ></i>
 
       <div className="w-full flex justify-center">
-        <i className="ri-user-community-line text-green-400 w-20 h-20 text-5xl text-shadow-md text-shadow-green-300 flex justify-center items-center bg-green-200 rounded-full"></i>
+        <i className="ri-user-community-line text-green-400 w-18 h-18 text-5xl text-shadow-md text-shadow-green-300 flex justify-center items-center bg-green-200 rounded-full"></i>
       </div>
 
       <Box
@@ -100,8 +100,8 @@ export default function Form2({ onNext, onBack, userData, setUserData }) {
         <button
           onClick={onNext}
           disabled={!isValid}
-          className={`cursor-pointer px-8 py-3 rounded-full w-1/3 text-2xl text-white font-semibold text-shadow-xs text-shadow-black ${
-            isValid ? "bg-green-500" : "bg-gray-400 cursor-not-allowed"
+          className={`cursor-pointer px-8 py-3 rounded-full w-1/3 text-2xl  font-semibold  ${
+            isValid ? "bg-green-200 text-green-500" : "bg-gray-200 text-white cursor-not-allowed"
           }`}
         >
           Continue

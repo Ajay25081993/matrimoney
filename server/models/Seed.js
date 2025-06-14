@@ -1,9 +1,8 @@
-
 "use strict";
-var config = require("../config/config");
-var sqldb = require("./index");
+import config from "../config/config.js";
+import sqldb from "./index.js";
 let {
- User,
+  User,
   Info,
   Verified,
   Block,
@@ -16,26 +15,20 @@ let {
   Setting,
   Notif,
   Interest,
-  Connection
+  Connection,
 } = sqldb;
 
-/* User.sync({ force: config.seedDBForce });
-Info.sync({ force: config.seedDBForce }); 
-Verified.sync({ force: config.seedDBForce });
-Block.sync({ force: config.seedDBForce });
-Report.sync({ force: config.seedDBForce });
-Like.sync({ force: config.seedDBForce });
-Dislike.sync({ force: config.seedDBForce });
-Visit.sync({ force: config.seedDBForce });
-Photo.sync({ force: config.seedDBForce });
-Message.sync({ force: config.seedDBForce });
-Setting.sync({ force: config.seedDBForce });
-Notif.sync({ force: config.seedDBForce });
-Interest.sync({ force: config.seedDBForce });
-Connection.sync({ force: config.seedDBForce }); */
-
-
-
-
-
-
+// User.sync({ force: config.seedDBForce });
+// Info.sync({ force: config.seedDBForce });
+// Verified.sync({ force: config.seedDBForce });
+// Block.sync({ force: config.seedDBForce });
+// Report.sync({ force: config.seedDBForce });
+// Like.sync({ force: config.seedDBForce });
+// Dislike.sync({ force: config.seedDBForce });
+// Visit.sync({ force: config.seedDBForce });
+// Photo.sync({ force: config.seedDBForce });
+// Message.sync({ force: config.seedDBForce });
+// Setting.sync({ force: config.seedDBForce });
+// Notif.sync({ force: config.seedDBForce });
+// Interest.sync({ force: config.seedDBForce });
+// Connection.sync({ force: config.seedDBForce });

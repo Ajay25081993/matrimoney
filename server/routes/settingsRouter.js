@@ -1,38 +1,27 @@
-const express = require('express');
-const { body, param, validationResult } = require('express-validator');
+import express from 'express';
+import { Setting } from '../models/Schemas.js';
+import { successResponse, errorResponse } from '../helper/responseHelper.js';
+import validate from '../middleware/validateRequest.js';
+import {
+  createOrUpdateSettingsValidator,
+  getSettingsValidator,
+  deleteSettingsValidator
+} from '../validators/settingsValidator.js';
+
 const settingsRouter = express.Router();
-const { Settings } = require('../models/Schemas'); // Adjust the path if needed
-const { successResponse, errorResponse } = require('../helper/responseHelper');
 
-// Middleware for validation errors
-const handleValidationErrors = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return errorResponse(res, "Validation error", errors.array(), 422);
-  }
-  next();
-};
-
-// Create or Update Settings (Upsert)
-settingsRouter.post('/',
-  [
-    body('user_id').isInt().withMessage('User ID must be an integer'),
-    body('visit').optional().isBoolean(),
-    body('like').optional().isBoolean(),
-    body('unlike').optional().isBoolean(),
-    body('match').optional().isBoolean(),
-    body('message').optional().isBoolean(),
-    handleValidationErrors,
-  ],
+// Create or Update Settings
+settingsRouter.post(
+  '/',
+  createOrUpdateSettingsValidator,
+  validate,
   async (req, res) => {
     try {
       const { user_id, visit, like, unlike, match, message } = req.body;
 
-      // Try find existing settings
-      let settings = await Settings.findOne({ where: { user_id } });
+      let settings = await Setting.findOne({ where: { user_id } });
 
       if (settings) {
-        // Update existing
         settings.visit = visit ?? settings.visit;
         settings.like = like ?? settings.like;
         settings.unlike = unlike ?? settings.unlike;
@@ -43,8 +32,7 @@ settingsRouter.post('/',
         return successResponse(res, "Settings updated successfully", [settings], 200);
       }
 
-      // Create new
-      settings = await Settings.create({
+      settings = await Setting.create({
         user_id,
         visit: visit ?? true,
         like: like ?? true,
@@ -63,16 +51,15 @@ settingsRouter.post('/',
 );
 
 // Get Settings by User ID
-settingsRouter.get('/:user_id',
-  [
-    param('user_id').isInt().withMessage('User ID must be an integer'),
-    handleValidationErrors,
-  ],
+settingsRouter.get(
+  '/:user_id',
+  getSettingsValidator,
+  validate,
   async (req, res) => {
     try {
       const { user_id } = req.params;
 
-      const settings = await Settings.findOne({ where: { user_id } });
+      const settings = await Setting.findOne({ where: { user_id } });
 
       if (!settings) return successResponse(res, "Settings not found", [], 200);
 
@@ -86,16 +73,15 @@ settingsRouter.get('/:user_id',
 );
 
 // Delete Settings by User ID
-settingsRouter.delete('/:user_id',
-  [
-    param('user_id').isInt().withMessage('User ID must be an integer'),
-    handleValidationErrors,
-  ],
+settingsRouter.delete(
+  '/:user_id',
+  deleteSettingsValidator,
+  validate,
   async (req, res) => {
     try {
       const { user_id } = req.params;
 
-      const deleted = await Settings.destroy({ where: { user_id } });
+      const deleted = await Setting.destroy({ where: { user_id } });
 
       if (!deleted) return successResponse(res, "Settings not found", [], 200);
 
@@ -108,4 +94,4 @@ settingsRouter.delete('/:user_id',
   }
 );
 
-module.exports = settingsRouter;
+export default settingsRouter;

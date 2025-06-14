@@ -1,54 +1,66 @@
-const express = require('express');
+import express from "express";
+import dotenv from "dotenv";
+import authRouter from "./routes/authRouter.js";
+import userRouter from "./routes/userRouter.js";
+import config from "./config/config.js";
+import authMiddleware from "./middleware/authMiddleware.js";
+import cors from "cors";
+import infosRouter from "./routes/infoRouter.js";
+import verifiedRouter from "./routes/verifiedRouter.js";
+import likesRouter from "./routes/likeRouter.js";
+import dislikesRouter from "./routes/dislikeRouter.js";
+import blocksRouter from "./routes/blockRouter.js";
+import reportsRouter from "./routes/reportRouter.js";
+import connectionRouter from "./routes/connectionRouter.js";
+import visitsRouter from "./routes/visitRouter.js";
+import photosRouter from "./routes/photoRouter.js";
+import messagesRouter from "./routes/messageRouter.js";
+import settingsRouter from "./routes/settingsRouter.js";
+import notifsRouter from "./routes/notifRouter.js";
+import interestsRouter from "./routes/interestRouter.js";
+import checkAuthRouter from "./routes/checkAuthRouter.js";
+
+dotenv.config();
 const app = express();
-const port = 5000;
-const authRouter=require("./routes/authRouter");
-const userRouter = require('./routes/userRouter');
-const config = require('./config/config');
-const authMiddleware = require('./middleware/authMiddleware');
-const cors = require("cors");
-const infosRouter = require('./routes/infoRouter');
-const verifiedRouter = require('./routes/verifiedRouter');
-const likesRouter = require('./routes/likeRouter');
-const dislikesRouter = require('./routes/dislikeRouter');
-const blocksRouter = require('./routes/blockRouter');
-const reportsRouter = require('./routes/reportRouter');
-const connectionRouter = require('./routes/connectionRouter');
-const visitsRouter = require('./routes/visitRouter');
-const photosRouter = require('./routes/photoRouter');
-const messagesRouter = require('./routes/messageRouter');
-const settingsRouter = require('./routes/settingsRouter');
-const notifsRouter = require('./routes/notifRouter');
-const interestsRouter = require('./routes/interestRouter');
-//body data parsing
 app.use(express.json());
+//body data parsing
 
-app.use(cors({
-    origin: "http://localhost:3000", // Allow frontend domain
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],  // Allowed HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"],  // Allowed headers
-    credentials: true,  // Allow cookies/sessions
-  }));
+const port = process.env.PORT;
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Allow frontend domain
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+    credentials: true, // Allow cookies/sessions
+  })
+);
 
+if (config.seedDB) {
+  import("./models/Seed.js").then(() => {
+    console.log("Seeding done.");
+  }).catch(err => {
+    console.error("Seeding failed:", err);
+  });
+}
 
-
-if (config.seedDB) { require('./models/Seed'); }
 
 //routers
-app.use('/auth',authRouter)
-app.use('/user',authMiddleware, userRouter)
-app.use('/infos',authMiddleware,infosRouter);
-app.use('/verified',authMiddleware, verifiedRouter);
-app.use('/likes',authMiddleware, likesRouter);
-app.use('/dislikes',authMiddleware, dislikesRouter);
-app.use('/blocks',authMiddleware, blocksRouter);
-app.use('/reports',authMiddleware, reportsRouter);
-app.use('/connection',authMiddleware, connectionRouter);
-app.use('/visits',authMiddleware, visitsRouter);
-app.use('/photos',authMiddleware, photosRouter);
-app.use('/messages',authMiddleware, messagesRouter);
-app.use('/settings',authMiddleware, settingsRouter);
-app.use('/notifs',authMiddleware, notifsRouter);
-app.use('/interests',authMiddleware, interestsRouter);
+app.use("/auth", authRouter);
+app.use("/checkAuth", authMiddleware, checkAuthRouter);
+app.use("/user", authMiddleware, userRouter);
+app.use("/infos", authMiddleware, infosRouter);
+app.use("/verified", authMiddleware, verifiedRouter);
+app.use("/likes", authMiddleware, likesRouter);
+app.use("/dislikes", authMiddleware, dislikesRouter);
+app.use("/blocks", authMiddleware, blocksRouter);
+app.use("/reports", authMiddleware, reportsRouter);
+app.use("/connection", authMiddleware, connectionRouter);
+app.use("/visits", authMiddleware, visitsRouter);
+app.use("/photos", authMiddleware, photosRouter);
+app.use("/messages", authMiddleware, messagesRouter);
+app.use("/settings", authMiddleware, settingsRouter);
+app.use("/notifs", authMiddleware, notifsRouter);
+app.use("/interests", authMiddleware, interestsRouter);
 
 //to create server and start on port
 app.listen(port, () => {

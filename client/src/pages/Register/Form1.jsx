@@ -34,10 +34,10 @@ const Form1 = ({ onNext, onBack, userData, setUserData }) => {
     <div>
       <i
         onClick={onBack}
-        className="ri-arrow-left-long-line text-3xl cursor-pointer text-gray-500"
+        className="ri-arrow-left-long-line text-2xl cursor-pointer text-gray-500"
       ></i>
       <div className="w-full flex justify-center">
-        <i className="ri-user-3-fill text-purple-500 w-20 h-20 text-5xl text-shadow-md text-shadow-purple-400 flex justify-center items-center bg-purple-200 rounded-full"></i>
+        <i className="ri-user-3-fill text-purple-500 w-18 h-18 text-5xl text-shadow-md text-shadow-purple-400 flex justify-center items-center bg-purple-200 rounded-full"></i>
       </div>
 
       <Box
@@ -64,9 +64,10 @@ const Form1 = ({ onNext, onBack, userData, setUserData }) => {
             <TextField
               className="!w-120"
               error={touched.firstName && Boolean(errors.firstName)}
-              onChange={(e) =>
-                setUserData({ ...userData, firstName: e.target.value })
-              }
+              onChange={(e) => {
+                const value = e.target.value.replace(/\s/g, ""); // remove all spaces
+                setUserData({ ...userData, firstName: value });
+              }}
               onBlur={() => handleBlur("firstName")}
               label="First Name"
               value={userData.firstName}
@@ -77,9 +78,10 @@ const Form1 = ({ onNext, onBack, userData, setUserData }) => {
             <TextField
               className="!w-120"
               error={touched.lastName && Boolean(errors.lastName)}
-              onChange={(e) =>
-                setUserData({ ...userData, lastName: e.target.value })
-              }
+              onChange={(e) => {
+                const value = e.target.value.replace(/\s/g, ""); // remove all spaces
+                setUserData({ ...userData, lastName: value });
+              }}
               onBlur={() => handleBlur("lastName")}
               label="Last Name"
               value={userData.lastName}
@@ -95,26 +97,29 @@ const Form1 = ({ onNext, onBack, userData, setUserData }) => {
               <TextField
                 type="number"
                 error={touched["dob.day"] && Boolean(errors["dob.day"])}
-                onChange={(e) =>
+                onChange={(e) => {
+                  const value = e.target.value.slice(0, 2); // allow max 2 digits
                   setUserData({
                     ...userData,
-                    dob: { ...userData.dob, day: e.target.value },
-                  })
-                }
+                    dob: { ...userData.dob, day: value },
+                  });
+                }}
                 onBlur={() => handleBlur("dob.day")}
                 label="Day"
                 value={userData.dob.day}
                 helperText={touched["dob.day"] && errors["dob.day"]}
               />
+
               <TextField
                 type="number"
                 error={touched["dob.month"] && Boolean(errors["dob.month"])}
-                onChange={(e) =>
+                onChange={(e) => {
+                  const value = e.target.value.slice(0, 2); // allow max 2 digits
                   setUserData({
                     ...userData,
-                    dob: { ...userData.dob, month: e.target.value },
-                  })
-                }
+                    dob: { ...userData.dob, month: value },
+                  });
+                }}
                 onBlur={() => handleBlur("dob.month")}
                 label="Month"
                 value={userData.dob.month}
@@ -123,12 +128,13 @@ const Form1 = ({ onNext, onBack, userData, setUserData }) => {
               <TextField
                 type="number"
                 error={touched["dob.year"] && Boolean(errors["dob.year"])}
-                onChange={(e) =>
+                onChange={(e) => {
+                  const value = e.target.value.slice(0, 4); // allow max 4 digits
                   setUserData({
                     ...userData,
-                    dob: { ...userData.dob, year: e.target.value },
-                  })
-                }
+                    dob: { ...userData.dob, year: value },
+                  });
+                }}
                 onBlur={() => handleBlur("dob.year")}
                 label="Year"
                 value={userData.dob.year}
@@ -144,8 +150,8 @@ const Form1 = ({ onNext, onBack, userData, setUserData }) => {
         <button
           disabled={!isValid}
           onClick={onNext}
-          className={`cursor-pointer px-8 py-3 rounded-full w-1/3 text-2xl text-white font-semibold text-shadow-xs text-shadow-black ${
-            isValid ? "bg-green-500" : "bg-gray-400 cursor-not-allowed"
+          className={`cursor-pointer px-8 py-3 rounded-full w-1/3 text-2xl  font-semibold ${
+            isValid ? "bg-purple-200 text-purple-500" : "bg-gray-200 text-white cursor-not-allowed"
           }`}
         >
           Continue

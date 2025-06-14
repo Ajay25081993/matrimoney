@@ -1,4 +1,5 @@
 export const religions = [
+  "Others",
   "Hindu",
   "Muslim",
   "Christian",
@@ -7,7 +8,6 @@ export const religions = [
   "Buddhist",
   "Parsi",
   "Jewish",
-  "Other",
   "No Religion",
-  "Spiritual - not religious"
+  "Spiritual - not religious",
 ];
