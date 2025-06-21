@@ -167,6 +167,7 @@ const MyPhotos = () => {
   return (
     <div className="w-full flex justify-center mt-30 pt-10 px-10 bg-blush-50 z-50">
       <Header
+      userData={userData}
         openMyPhotos={openMyPhotos}
         setOpenMyPhotos={setOpenMyPhotos}
         profilePic={userData.profilePic}

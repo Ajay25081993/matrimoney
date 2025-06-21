@@ -23,6 +23,7 @@ const Home = () => {
   return (
     <div className="bg-gray-100 w-full ">
       <Header
+      userData={userData}
         profilePic={userData.profilePic}
         openDashboard={openDashboard}
         setOpenDashboard={setOpenDashboard}
