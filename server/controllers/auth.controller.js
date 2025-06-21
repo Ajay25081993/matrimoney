@@ -46,12 +46,12 @@ export const register = async (req, res) => {
     };
 
     let result = await User.create(newUser);
-    console.log("id",result.dataValues.id);
-    
+    console.log("id", result.dataValues.id);
+
     const payload = { user: { user_id: result.dataValues.id } };
-    let access_token =await generateToken(payload);
-    console.log("AT",access_token);
-    
+    let access_token = await generateToken(payload);
+    console.log("AT", access_token);
+
     if (result) {
       let resultData = {
         user: result,
@@ -67,24 +67,23 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  let { username, password } = req.body;
+  let { email, password } = req.body;
 
   try {
     let checkUser = await User.findOne({
-      where: { email: username },
+      where: { email },
       raw: true,
     });
     if (!checkUser) return successResponse(res, "Invalid credentials", [], 200);
 
-    bcrypt.compare(password, checkUser.password, (err, data) => {
+    bcrypt.compare(password, checkUser.password,async (err, data) => {
       if (err || !data)
         return successResponse(res, "Invalid credentials", [], 200);
 
       const payload = { user: { user_id: checkUser.id } };
 
-      let access_token = generateToken(payload);
-
-      let refresh_token = generateToken(payload);
+      let access_token = await generateToken(payload);
+      let refresh_token =await generateToken(payload);
 
       delete checkUser.password;
 
@@ -97,6 +96,7 @@ export const login = async (req, res) => {
       successResponse(res, "Successfully login", [resultData], 200);
     });
   } catch (error) {
+    console.log(error);
     errorResponse(res, "Server error", [], 500);
   }
 };

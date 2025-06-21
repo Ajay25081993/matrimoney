@@ -33,6 +33,6 @@ export const registerValidator = [
 ];
 
 export const loginValidator = [
-  body("username").notEmpty().withMessage("Username (email) is required"),
+  body("email").notEmpty().withMessage("Username (email) is required"),
   body("password").notEmpty().withMessage("Password is required"),
 ];

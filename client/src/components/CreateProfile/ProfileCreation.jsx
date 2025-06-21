@@ -238,7 +238,7 @@ const ProfileCreation = ({ formData, setFormData }) => {
               ))}
             </TextField>
 
-            {/* Weight */}
+            {/* Weight
             <TextField
               error={showError("weight")}
               select
@@ -258,7 +258,7 @@ const ProfileCreation = ({ formData, setFormData }) => {
                   {option}
                 </option>
               ))}
-            </TextField>
+            </TextField> */}
 
             {/* Sub-Community */}
             <TextField

@@ -3,13 +3,20 @@ import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { Loader } from "lucide-react";
 
-import Landing from "./pages/Landing";
 // import { useAuthStore } from "./store/useAuthStore";
 import PrivateRoute from "./components/Private Route/PrivateRoute";
 import { privateRoutes } from "./components/Private Route/privateRoutes";
 
-// Lazy loaded pages
+const Landing = lazy(() => import("./pages/Landing"));
+const MyProfile = lazy(() => import("./pages/My Profile/MyProfile"));
+const More = lazy(() => import("./pages/More/More"));
+const Settings = lazy(() => import("./pages/Settings/Settings"));
+const MyPhotos = lazy(() => import("./pages/MyPhotos/MyPhotos"));
+const PartnerPreferences = lazy(() =>
+  import("./pages/PartnerPreferences/PartnerPreferences")
+);
 const Home = lazy(() => import("./pages/Home/Home"));
+const Matches = lazy(() => import("./pages/Matches/Matches"));
 const FamilyDetails = lazy(() => import("./pages/FamilyDetails/FamilyDetails"));
 const UploadPhoto = lazy(() => import("./pages/Upload Photo/UploadPhoto"));
 const Hobby = lazy(() => import("./pages/Hobbies&Interests/Hobby"));
@@ -24,12 +31,18 @@ const App = () => {
   // const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
   const componentsMap = {
     Home,
+    Matches,
+    More,
+    Settings,
+    MyPhotos,
     FamilyDetails,
     UploadPhoto,
     Hobby,
     ProfilePreview,
     CreateProfile,
     Inbox,
+    MyProfile,
+    PartnerPreferences,
   };
   // useEffect(() => {
   //   checkAuth();

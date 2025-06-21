@@ -1,15 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Logo from "../../assets/loginLogo.png";
+import axiosInstance from "../../lib/axios";
+import { API_URLS } from "../../constants/apiUrls";
+import { showErrorToast, showSuccessToast } from "../../lib/toast";
+import { useNavigate } from "react-router-dom";
 
-const Login = ({ showLogin, setShowLogin,setShowRegister }) => {
-  // 👇 State for inputs
+const Login = ({ showLogin, setShowLogin, setShowRegister }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showOutline, setShowOutline] = useState(false);
+  const navigateTo = useNavigate();
+  const passwordWrapperRef = useRef(null);
+  //  State for inputs
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    stayLoggedIn: false,
+    // stayLoggedIn: false,
   });
 
-  // 👇 Handler for text inputs
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        passwordWrapperRef.current &&
+        !passwordWrapperRef.current.contains(event.target)
+      ) {
+        setShowOutline(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  //  Handler for text inputs
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -19,14 +43,24 @@ const Login = ({ showLogin, setShowLogin,setShowRegister }) => {
   };
 
   const openRegister = () => {
-    setShowRegister(true)
-    setShowLogin(false)
+    setShowRegister(true);
+    setShowLogin(false);
   };
 
-  // 👇 Handle login button click
-  const handleLogin = () => {
+  //  Handle login button click
+  const handleLogin = async () => {
     console.log("Login data submitted:", formData);
-    // Add your login API call logic here
+    try {
+      const response = await axiosInstance.post(API_URLS.LOGIN, formData);
+      console.log("Res", response.data[0].user.id);
+      if (response.data[0].access_token) {
+        localStorage.setItem("userId", response.data[0].user.id);
+        showSuccessToast(response.message, navigateTo, "/home");
+      }
+    } catch (error) {
+      console.log(error);
+      showErrorToast("Invalid credentials");
+    }
   };
 
   return (
@@ -50,29 +84,50 @@ const Login = ({ showLogin, setShowLogin,setShowRegister }) => {
           <div className="flex flex-col">
             <label className="mb-1">Email ID.</label>
             <input
-              name="identifier"
+              name="email"
               value={formData.email}
-              onChange={handleChange}
-              className="outline-sky-400 w-full p-2 border-1 border-gray-400 rounded-sm"
+              onChange={(e) => handleChange(e)}
+              className="outline-sky-500 w-full p-2 border-1 border-gray-400 rounded-sm"
               type="text"
-              placeholder="Enter Mobile No. / Email ID"
+              placeholder="Enter Email ID"
             />
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col ">
             <label className="mb-1">Password</label>
-            <input
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="outline-sky-400 w-full p-2 border-1 border-gray-400 rounded-sm"
-              type="password"
-              placeholder="Enter Password"
-            />
+            <div
+              ref={passwordWrapperRef}
+              onClick={() => setShowOutline(true)}
+              className={`${
+                showOutline
+                  ? "border-2 border-sky-500"
+                  : "border-2 border-gray-400"
+              } flex items-center   rounded-sm`}
+            >
+              <input
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="outline-0 flex-2 p-2"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter Password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="px-2 text-gray-500 focus:outline-none cursor-pointer"
+              >
+                {showPassword ? (
+                  <i className="ri-eye-off-fill"></i>
+                ) : (
+                  <i className="ri-eye-fill"></i>
+                )}
+              </button>
+            </div>
           </div>
 
           <div className="w-full flex justify-between items-center">
-            <div>
+            {/* <div>
               <input
                 type="checkbox"
                 id="login"
@@ -83,7 +138,7 @@ const Login = ({ showLogin, setShowLogin,setShowRegister }) => {
               <label htmlFor="login" className="ml-1">
                 Stay Logged in
               </label>
-            </div>
+            </div> */}
             <p className="text-sky-400 hover:underline cursor-pointer">
               Forgot Password?
             </p>
@@ -93,14 +148,14 @@ const Login = ({ showLogin, setShowLogin,setShowRegister }) => {
         <div className="flex flex-col gap-2">
           <button
             onClick={handleLogin}
-            className="w-full bg-sky-400 rounded-md p-2 hover:bg-sky-500"
+            className="w-full cursor-pointer bg-sky-400 rounded-md p-2 hover:bg-sky-500"
           >
             Login
           </button>
 
           <p className="text-center text-gray-400 text-xs font-bold">OR</p>
 
-          <button className="w-full bg-sky-400 rounded-md p-2 hover:bg-sky-500">
+          <button className="w-full cursor-pointer bg-sky-400 rounded-md p-2 hover:bg-sky-500">
             Login With OTP
           </button>
         </div>

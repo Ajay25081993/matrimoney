@@ -6,7 +6,7 @@ import Select from "@mui/material/Select";
 import FormHelperText from "@mui/material/FormHelperText";
 import { motherOption, fatherOption, number } from "./option";
 
-const Family = ({ formData, setFormData,handleSubmit }) => {
+const Family = ({ formData, setFormData, handleSubmit }) => {
   const [touched, setTouched] = useState({
     mother: false,
     father: false,
@@ -19,13 +19,15 @@ const Family = ({ formData, setFormData,handleSubmit }) => {
   const requiredFields = ["mother", "father", "sister", "brother"];
 
   // Validate form on every relevant state change
- const validateForm = (updatedFormData) => {
-  const isAllFilled = requiredFields.every(
-    (field) => updatedFormData[field] !== "" && updatedFormData[field] !== null && updatedFormData[field] !== undefined
-  );
-  setIsValid(isAllFilled);
-};
-
+  const validateForm = (updatedFormData) => {
+    const isAllFilled = requiredFields.every(
+      (field) =>
+        updatedFormData[field] !== "" &&
+        updatedFormData[field] !== null &&
+        updatedFormData[field] !== undefined
+    );
+    setIsValid(isAllFilled);
+  };
 
   // Handle input change
   const handleChange = (field) => (event) => {
@@ -42,8 +44,7 @@ const Family = ({ formData, setFormData,handleSubmit }) => {
   };
 
   const onNext = () => {
-    handleSubmit()
-    
+    handleSubmit();
   };
 
   // Reusable select field component
@@ -91,8 +92,8 @@ const Family = ({ formData, setFormData,handleSubmit }) => {
         {/* Form Fields */}
         {renderSelectField("Mother's Details", "mother", motherOption)}
         {renderSelectField("Father's Details", "father", fatherOption)}
-        {renderSelectField("No. of Sisters", "sister", number)}
-        {renderSelectField("No. of Brothers", "brother", number)}
+        {renderSelectField("No. of Sisters", "noOfSister", number)}
+        {renderSelectField("No. of Brothers", "noOfBrother", number)}
 
         {/* Continue Button */}
         <div className="w-full flex justify-center">

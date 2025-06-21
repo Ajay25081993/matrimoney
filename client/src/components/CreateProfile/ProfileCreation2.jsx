@@ -209,7 +209,7 @@ const ProfileCreation2 = ({ formData, setFormData }) => {
 
             {/* Work As */}
 
-            {formData.workWith && formData.workWith !== "Not Working" && (
+            {formData.workWith && formData.workWith !== "Not Working"&&formData.workWith !== "Business / Self Employed" && (
               <div>
                 <TextField
                   error={showError("workAs")}

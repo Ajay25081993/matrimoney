@@ -11,14 +11,20 @@ export const createInfo = async (req, res) => {
     monthlyIncome,
     yearlyIncome,
     city,
+    company,
     liveWithFamily,
     maritalStatus,
     hasChildren,
     diet,
     height,
+    weight,
     subCommunity,
     casteNoBar,
     about,
+    mother,
+    father,
+    noOfsister,
+    noOfBrother,
   } = req.body;
   const newInfo = {
     user_id: req.user,
@@ -29,6 +35,7 @@ export const createInfo = async (req, res) => {
     income: monthlyIncome.length ? monthlyIncome : yearlyIncome,
     languageKnown,
     city,
+    company,
     liveWithFamily,
     maritalStatus,
     children: hasChildren,
@@ -37,6 +44,10 @@ export const createInfo = async (req, res) => {
     subCommunity,
     casteMatters: casteNoBar,
     aboutMe: about,
+    mother,
+    father,
+    noOfsister,
+    noOfBrother,
   };
   try {
     const info = await Info.create(newInfo);
@@ -51,9 +62,7 @@ export const getInfo = async (req, res) => {
   try {
     const info = await Info.findOne({
       where: { user_id: req.params.user_id },
-      include: [
-        { model: User, as: "user", attributes: ["id", "username", "email"] },
-      ],
+      include: [{ model: User, as: "User", attributes: ["id", "email"] }],
     });
 
     if (!info) return successResponse(res, "Info not found", [], 200);

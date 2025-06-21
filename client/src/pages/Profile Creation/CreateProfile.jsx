@@ -31,15 +31,15 @@ const CreateProfile = ({ steps }) => {
     hasChildren: "",
     diet: "",
     height: "",
-    weight: "",
+    // weight: "",
     subCommunity: "",
     casteNoBar: false,
     about:
       "Hi! It feels good to introduce myself. I have a flexible, open-minded and progressive mindset. I am looking forward to settling down with a partner who shares my values and interests, someone with whom I can always be myself. Thank you for your valued time!",
     mother: "",
     father: "",
-    sister: "",
-    brother: "",
+    noOfSister: "",
+    noOfbrother: "",
   });
   const handleSubmit = async () => {
     try {

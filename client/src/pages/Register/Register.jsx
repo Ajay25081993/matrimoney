@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { toast, Bounce } from "react-toastify";
 import { monthNames } from "./monthName";
 import { useAuthStore } from "../../store/useAuthStore";
+import { calculateAge } from "../../components/MyProfile Components/ageCalculate";
 const Register = ({ showRegister, setShowRegister }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [showGender, setShowGender] = useState(false);
@@ -34,6 +35,7 @@ const Register = ({ showRegister, setShowRegister }) => {
     email: "",
     phoneNo: "",
     password: "",
+    age:""
   };
   const [userData, setUserData] = useState(initialUserData);
 
@@ -61,6 +63,7 @@ const Register = ({ showRegister, setShowRegister }) => {
       gender: updateGender,
       dob: dobFormatted,
       createdFor: createdFor,
+      age:calculateAge(dobFormatted)
     };
 
     setUserData(updatedUserData);

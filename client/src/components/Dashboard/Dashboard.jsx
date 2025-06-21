@@ -1,17 +1,23 @@
 import React from "react";
-import dp from "../../assets/Dp.png";
+
 import hs from "../../assets/horoscope.png";
 import vf from "../../assets/verified.png";
-import family from "../../assets/family.png";
+// import family from "../../assets/family.png";
 
-const Dashboard = () => {
+const Dashboard = ({ userData }) => {
   return (
-    <div className=" flex bg-gray-100 py-6 justify-center gap-5 w-full">
+    <div className=" flex bg-gray-100 py-6 justify-center gap-5 w-full mt-8">
       <div className="bg-white border-1 border-gray-300 rounded-md w-60 text-gray-500 space-y-2">
-        <img src={dp} className="w-60 rounded-t-md" alt="" />
+        <img
+          src={userData.profilePic}
+          className="w-60 h-60 rounded-t-md"
+          alt=""
+        />
         <div className="flex items-center w-full justify-between  cursor-pointer px-3 py-1">
-          <p className="text-sm">Rudradeb Maji</p>
-          <i class="ri-edit-2-fill mt-1 text-cyan-300"></i>
+          <p className="text-sm">
+            {userData.firstName + " " + userData.lastName}
+          </p>
+          {/* <i class="ri-edit-2-fill mt-1 text-cyan-300"></i> */}
         </div>
         <hr className="mx-3 text-gray-300" />
         <div className="flex items-center w-full justify-between  cursor-pointer px-3 py-1">
@@ -61,17 +67,18 @@ const Dashboard = () => {
         <div className="space-y-3">
           <p>Improve Your Profile</p>
           <div className="flex flex-col gap-2 border-1 border-gray-300 h-56 rounded-md items-center justify-center">
-            <div className="h-15 flex w-50 items-center justify-center font-semibold  gap-2 cursor-pointer hover:bg-gray-100 border-1 border-gray-300 rounded-xl p-2 bg-white">
-              <img src={vf} alt="" className="w-13 " /> <p>Verify Profile</p>
+            <div className="h-15 flex w-50 items-center  font-semibold justify-between  cursor-pointer hover:bg-gray-100 border-1 border-gray-300 rounded-xl p-2 bg-white">
+              <img src={vf} alt="" className="w-12 h-12" />{" "}
+              <p>Verify Profile</p>
             </div>
-            <div className="w-50 h-15 flex itcems-center justify-center font-semibold  gap-2 cursor-pointer hover:bg-gray-100 border-1 border-gray-300 rounded-xl p-2 bg-white">
+            <div className="w-50 h-15 flex itcems-center justify-between font-semibold   cursor-pointer hover:bg-gray-100 border-1 border-gray-300 rounded-xl p-2 bg-white">
               <img src={hs} alt="" className="w-10 h-10" />{" "}
               <p className="mt-1.5">Add Horoscope</p>
             </div>{" "}
-            <div className="w-50 h-15 flex itcems-center justify-center font-semibold  gap-2 cursor-pointer hover:bg-gray-100 border-1 border-gray-300 rounded-xl p-2 bg-white">
+            {/* <div className="w-50 h-15 flex itcems-center justify-between font-semibold   cursor-pointer hover:bg-gray-100 border-1 border-gray-300 rounded-xl p-2 bg-white">
               <img src={family} alt="" className="w-10 h-10" />{" "}
               <p className="mt-1.5">Family Details</p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

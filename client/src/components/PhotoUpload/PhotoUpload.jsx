@@ -5,7 +5,7 @@ import { images } from "./images";
 import { useAuthStore } from "../../store/useAuthStore";
 
 const PhotoUpload = () => {
-  const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
+  // const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
   const fileInputRef = useRef(null);
 const [selectedImg, setSelectedImg] = useState(null);
   const handleDivClick = () => {

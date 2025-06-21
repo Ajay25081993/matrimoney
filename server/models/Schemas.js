@@ -33,6 +33,7 @@ const User = sequelize.define(
     firstName: Sequelize.STRING(30),
     lastName: Sequelize.STRING(30),
     dob: Sequelize.STRING(30),
+    age: Sequelize.STRING(4),
     religion: Sequelize.STRING(30),
     community: Sequelize.STRING(30),
     state: Sequelize.STRING(30),
@@ -41,7 +42,8 @@ const User = sequelize.define(
     password: Sequelize.STRING(128),
     gender: Sequelize.STRING(10),
     createdFor: Sequelize.STRING(20),
-    imageUrl: Sequelize.TEXT(),
+    profilePic: Sequelize.TEXT(),
+    profile_type: Sequelize.STRING(10),
 
     company: Sequelize.STRING(30),
     is_deleted: {
@@ -60,11 +62,12 @@ const Info = sequelize.define(
   {
     user_id: { type: Sequelize.INTEGER, allowNull: false },
     qualification: Sequelize.STRING(15),
-    college: Sequelize.STRING(15),
+    college: Sequelize.STRING(30),
     workWith: Sequelize.STRING(30),
     workAs: Sequelize.STRING(30),
+    company: Sequelize.STRING(50),
     income: Sequelize.STRING(30),
-    languageKnown:Sequelize.STRING(30),
+    languageKnown: Sequelize.STRING(30),
     city: Sequelize.STRING(15),
     liveWithFamily: Sequelize.STRING(15),
     maritalStatus: Sequelize.STRING(15),
@@ -75,16 +78,10 @@ const Info = sequelize.define(
     subCommunity: Sequelize.STRING(15),
     casteMatters: Sequelize.STRING(15),
     aboutMe: Sequelize.STRING(4000),
-    
-    sexuality: { type: Sequelize.STRING(20), defaultValue: "bisexual" },
-     
-    profile_pic: {
-      type: Sequelize.STRING(256),
-      defaultValue: "/photos/default.png",
-    },
-    popularity: { type: Sequelize.INTEGER, allowNull: true },
-    latitude: Sequelize.FLOAT(12, 8),
-    longitude: Sequelize.FLOAT(12, 8),
+    mother: Sequelize.STRING(10),
+    father: Sequelize.STRING(10),
+    noOfSister: Sequelize.STRING(10),
+    noOfBrother: Sequelize.STRING(10),
     address_modified: { type: Sequelize.BOOLEAN, defaultValue: false },
     is_deleted: {
       type: Sequelize.TINYINT(1),
@@ -314,6 +311,7 @@ const Connection = sequelize.define(
 
 User.hasOne(Info, { foreignKey: "user_id" });
 User.hasMany(Like, { foreignKey: "liker_id" });
+Info.belongsTo(User, { as: "User", foreignKey: "user_id" });
 
 // In models/Schemas.js or corresponding model files
 Like.belongsTo(User, { foreignKey: "liked_id", as: "likedUser" });
@@ -325,7 +323,7 @@ Visit.belongsTo(User, { foreignKey: "visited_id", as: "visited" });
 Photo.belongsTo(User, { foreignKey: "user_id", as: "user" });
 User.hasOne(Photo, { foreignKey: "user_id", as: "photo" });
 
-export  {
+export {
   sequelize,
   User,
   Info,

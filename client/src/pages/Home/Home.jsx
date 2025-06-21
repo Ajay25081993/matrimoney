@@ -1,38 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header/Header3";
 import Dashboard from "../../components/Dashboard/Dashboard";
-import MyProfile from "../../components/My Profile/MyProfile";
+import MyProfile from "../My Profile/MyProfile";
+import axiosInstance from "../../lib/axios";
+import { API_URLS } from "../../constants/apiUrls";
 
 const Home = () => {
+  const [userData, setUserData] = useState([]);
   const [openDashboard, setOpenDashboard] = useState(true);
-  const [openMyProfile, setOpenMyProfile] = useState(false);
-  const [openMyPhotos, setOpenMyPhotos] = useState(false);
-  const [openPartnerPreferences, setOpenPartnerPreferences] = useState(false);
-  const [openSettings, setOpenSettings] = useState(false);
-  const [openMore, setOpenMore] = useState(false);
+  const fetchData = async (user_id) => {
+    const dataResponse = await axiosInstance.get(
+      `${API_URLS.GET_USER_BY_ID}/${user_id}`
+    );
+    console.log(dataResponse);
+    setUserData(dataResponse.data[0]);
+  };
+  useEffect(() => {
+    const user_id = localStorage.getItem("user_id");
+    fetchData(user_id);
+  }, []);
+
   return (
-    <div className="bg-gray-100  w-full ">
+    <div className="bg-gray-100 w-full ">
       <Header
+        profilePic={userData.profilePic}
         openDashboard={openDashboard}
         setOpenDashboard={setOpenDashboard}
-        openMyProfile={openMyProfile}
-        setOpenMyProfile={setOpenMyProfile}
-        openMyPhotos={openMyPhotos}
-        setOpenMyPhotos={setOpenMyPhotos}
-        openPartnerPreferences={openPartnerPreferences}
-        setOpenPartnerPreferences={setOpenPartnerPreferences}
-        openSettings={openSettings}
-        setOpenSettings={setOpenSettings}
-        openMore={openMore}
-        setOpenMore={setOpenMore}
       />
       <div className="pt-20 ">
-        {openDashboard && <Dashboard />}
-        {openMyProfile && <MyProfile />}
-        {openMyPhotos && <div>My Photos Content</div>}
+        <Dashboard userData={userData} />
+        {/* {openMyProfile && <MyProfile userData={userData} />} */}
+        {/* {openMyPhotos && <div>My Photos Content</div>}
         {openPartnerPreferences && <div>Partner Preferences Content</div>}
         {openSettings && <div>Settings Content</div>}
-        {openMore && <div>More Content</div>}
+        {openMore && <div>More Content</div>} */}
       </div>
     </div>
   );

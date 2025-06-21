@@ -9,6 +9,7 @@ const createUserValidator = [
 ];
 
 // Get User by ID Validation
+
 const getUserByIdValidator = [
   param('user_id').isInt().withMessage('user_id must be an integer'),
 ];

@@ -1,10 +1,10 @@
 import React from "react";
-import Logo from "../../assets/ShadiLogo.png";
+import Logo from "../../assets/SoulBandhan.png";
 // import Logo from "../../assets/S B.png";
-import dp from "../../assets/Dp.png";
+
 import { useNavigate } from "react-router-dom";
 import Hover from "../ProfileHover/Hover";
-const Header = () => {
+const Header = ({ profilePic,userData }) => {
   const navigate = useNavigate();
 
   const handleHomeClick = () => {
@@ -14,16 +14,15 @@ const Header = () => {
     navigate("/inbox");
   };
   return (
-    <div className="w-full fixed top-0 left-0 z-50 ">
-      <div className="w-full px-50 py-4 bg-[#ff0000] flex justify-between items-center shadow-sm shadow-gray-500">
+    <div className="w-full fixed top-0 left-0 z-auto">
+      <div className="w-full h-21 px-55 py-1 bg-[#470f65dd] backdrop-blur-sm flex justify-between items-center shadow-md shadow-zinc-900">
         <div>
-          <img src={Logo} alt="" className="w-20" />
+          <img src={Logo} alt="" className="w-45" />
         </div>
 
         <div className="flex items-center gap-8 text-white">
-          <div onClick={()=>handleHomeClick()} className="cursor-pointer">
-          <span>Home</span>
-
+          <div onClick={() => handleHomeClick()} className="cursor-pointer">
+            <span>Home</span>
           </div>
           <span>
             Matches{" "}
@@ -54,108 +53,19 @@ const Header = () => {
 
           <div className="relative group">
             <div className=" relative flex items-center gap-2 cursor-pointer text-white">
-              <img src={dp} className="w-13 rounded-full" alt="" />
+               <div className="h-12 w-12 transition-all duration-300 ease-in-out overflow-hidden rounded-full relative">
+                <img
+                  src={profilePic}
+                  className="object-cover w-full"
+                  alt=""
+                />
+              </div>
               <i class="ri-arrow-down-s-line mt-1"></i>
             </div>
-            {<Hover className="group-hover:block hidden top-11 -right-17" />}
+            <Hover userData={userData} className="group-hover:block hidden top-5 -right-18" />
           </div>
         </div>
       </div>
-
-      {/* <div className="bg-white w-full shadow-md shadow-gray-400 text-gray-500 flex gap-7 py-1 items-center justify-center">
-        <span
-          className={`cursor-pointer ${
-            openDashboard ? "text-red-500 underline underline-offset-8" : ""
-          }`}
-          onClick={() => {
-            setOpenDashboard(true);
-            setOpenMyProfile(false);
-            setOpenMyPhotos(false);
-            setOpenPartnerPreferences(false);
-            setOpenSettings(false);
-            setOpenMore(false);
-          }}
-        >
-          Dashboard
-        </span>
-        <span
-          className={`cursor-pointer ${
-            openMyProfile ? "text-red-500 underline underline-offset-8 " : ""
-          }`}
-          onClick={() => {
-            setOpenMyProfile(true);
-            setOpenDashboard(false);
-            setOpenMyPhotos(false);
-            setOpenPartnerPreferences(false);
-            setOpenSettings(false);
-            setOpenMore(false);
-          }}
-        >
-          My Profile
-        </span>
-        <span
-          className={`cursor-pointer ${
-            openMyPhotos ? "text-red-500 underline underline-offset-8 " : ""
-          }`}
-          onClick={() => {
-            setOpenMyPhotos(true);
-            setOpenDashboard(false);
-            setOpenMyProfile(false);
-            setOpenPartnerPreferences(false);
-            setOpenSettings(false);
-            setOpenMore(false);
-          }}
-        >
-          My Photos
-        </span>
-        <span
-          className={`cursor-pointer ${
-            openPartnerPreferences
-              ? "text-red-500 underline underline-offset-8 "
-              : ""
-          }`}
-          onClick={() => {
-            setOpenPartnerPreferences(true);
-            setOpenDashboard(false);
-            setOpenMyProfile(false);
-            setOpenMyPhotos(false);
-            setOpenSettings(false);
-            setOpenMore(false);
-          }}
-        >
-          Partner Preferences
-        </span>
-        <span
-          className={`cursor-pointer ${
-            openSettings ? "text-red-500 underline underline-offset-8 " : ""
-          }`}
-          onClick={() => {
-            setOpenSettings(true);
-            setOpenDashboard(false);
-            setOpenMyProfile(false);
-            setOpenMyPhotos(false);
-            setOpenPartnerPreferences(false);
-            setOpenMore(false);
-          }}
-        >
-          Settings
-        </span>
-        <span
-          className={`cursor-pointer ${
-            openMore ? "text-red-500 underline underline-offset-8 " : ""
-          }`}
-          onClick={() => {
-            setOpenMore(true);
-            setOpenDashboard(false);
-            setOpenMyProfile(false);
-            setOpenMyPhotos(false);
-            setOpenPartnerPreferences(false);
-            setOpenSettings(false);
-          }}
-        >
-          More
-        </span>
-      </div> */}
     </div>
   );
 };

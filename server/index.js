@@ -13,7 +13,7 @@ import blocksRouter from "./routes/blockRouter.js";
 import reportsRouter from "./routes/reportRouter.js";
 import connectionRouter from "./routes/connectionRouter.js";
 import visitsRouter from "./routes/visitRouter.js";
-import photosRouter from "./routes/photoRouter.js";
+import photoRouter from "./routes/photoRouter.js";
 import messagesRouter from "./routes/messageRouter.js";
 import settingsRouter from "./routes/settingsRouter.js";
 import notifsRouter from "./routes/notifRouter.js";
@@ -22,8 +22,10 @@ import checkAuthRouter from "./routes/checkAuthRouter.js";
 
 dotenv.config();
 const app = express();
-app.use(express.json());
+// app.use(express.json());
 //body data parsing
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 const port = process.env.PORT;
 app.use(
@@ -36,13 +38,14 @@ app.use(
 );
 
 if (config.seedDB) {
-  import("./models/Seed.js").then(() => {
-    console.log("Seeding done.");
-  }).catch(err => {
-    console.error("Seeding failed:", err);
-  });
+  import("./models/Seed.js")
+    .then(() => {
+      console.log("Seeding done.");
+    })
+    .catch((err) => {
+      console.error("Seeding failed:", err);
+    });
 }
-
 
 //routers
 app.use("/auth", authRouter);
@@ -56,7 +59,7 @@ app.use("/blocks", authMiddleware, blocksRouter);
 app.use("/reports", authMiddleware, reportsRouter);
 app.use("/connection", authMiddleware, connectionRouter);
 app.use("/visits", authMiddleware, visitsRouter);
-app.use("/photos", authMiddleware, photosRouter);
+app.use("/photos", authMiddleware, photoRouter);
 app.use("/messages", authMiddleware, messagesRouter);
 app.use("/settings", authMiddleware, settingsRouter);
 app.use("/notifs", authMiddleware, notifsRouter);
