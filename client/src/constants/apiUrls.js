@@ -7,6 +7,8 @@ export const API_URLS = {
   GET_INFO_BY_USER_ID: "/infos",
   LOGIN: "/auth/login",
   ADD_PHOTO: "/photos/add",
+  ADD_PROFILE_PHOTO: "/photos/upload-photo",
   GET_PHOTO: "/photos",
   DELETE_PHOTO: "/photos/delete",
+  EDIT_INFO:"/infos"
 };

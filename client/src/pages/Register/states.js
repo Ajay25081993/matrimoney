@@ -1,4 +1,5 @@
 export const indianStates = [
+  "Select",
   "Andhra Pradesh",
   "Arunachal Pradesh",
   "Assam",

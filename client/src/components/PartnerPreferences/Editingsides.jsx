@@ -101,7 +101,7 @@ const Editingsides = ({ scrollTargets }) => {
   };
 
   return (
-    <div className="relative w-2xl border border-gray-200 rounded-md">
+    <div className="relative w-2xl border border-gray-200 rounded-md ml-130">
       <div className="p-5">
         <h2 className="font-bold text-xl">Partner Preferences</h2>
         <div className="mt-3 text-sm space-y-1">

@@ -1,4 +1,5 @@
 export const religions = [
+  "Select",
   "Others",
   "Hindu",
   "Muslim",

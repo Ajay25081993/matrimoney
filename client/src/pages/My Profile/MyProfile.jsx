@@ -23,7 +23,7 @@
 //   const [viewMore, setViewMore] = useState(false);
 //   const [userInfo, setUserInfo] = useState([]);
 //   const [userData, setUserData] = useState([]);
-  
+
 //   useEffect(() => {
 //     const user_id = localStorage.getItem("user_id");
 
@@ -222,8 +222,13 @@ const MyProfile = () => {
     const user_id = localStorage.getItem("user_id");
     const fetchData = async (user_id) => {
       try {
-        const dataResponse = await axiosInstance.get(`${API_URLS.GET_USER_BY_ID}/${user_id}`);
-        const infoResponse = await axiosInstance.get(`${API_URLS.GET_INFO_BY_USER_ID}/${user_id}`);
+        const dataResponse = await axiosInstance.get(
+          `${API_URLS.GET_USER_BY_ID}/${user_id}`
+        );
+        const infoResponse = await axiosInstance.get(
+          `${API_URLS.GET_INFO_BY_USER_ID}/${user_id}`
+        );
+
         setUserInfo(infoResponse.data[0]);
         setUserData(dataResponse.data[0]);
       } catch (err) {
@@ -250,14 +255,20 @@ const MyProfile = () => {
     {
       icon: photo,
       title: "Add More Photos",
-      subtitle: "Adding three or more photos might increase your chances of getting more responses.",
+      subtitle:
+        "Adding three or more photos might increase your chances of getting more responses.",
       button: "Add More Photos",
     },
   ].filter(Boolean);
 
   return (
     <div className="w-full bg-[#d29bff53]">
-      <Header userData={userData} profilePic={userData.profilePic} openMyProfile={openMyProfile} setOpenMyProfile={setOpenMyProfile} />
+      <Header
+        userData={userData}
+        profilePic={userData.profilePic}
+        openMyProfile={openMyProfile}
+        setOpenMyProfile={setOpenMyProfile}
+      />
 
       <div className="w-full py-12 mt-22 flex justify-center font-semibold gap-5">
         <div className="w-3xl flex flex-col gap-4">
@@ -330,6 +341,3 @@ const MyProfile = () => {
 };
 
 export default MyProfile;
-
-
-

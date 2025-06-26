@@ -1,18 +1,19 @@
-import express from 'express';
-import { successResponse, errorResponse } from '../helper/responseHelper.js';
-import { Like, User } from '../models/Schemas.js';
-import handleValidationErrors from '../middleware/validateRequest.js';
+import express from "express";
+import { successResponse, errorResponse } from "../helper/responseHelper.js";
+import { Like, User } from "../models/Schemas.js";
+import handleValidationErrors from "../middleware/validateRequest.js";
 import {
   addLikeValidation,
   getLikesByUserValidation,
   getLikedByValidation,
-  deleteLikeValidation
-} from '../validators/likeValidator.js';
+  deleteLikeValidation,
+} from "../validators/likeValidator.js";
 
 const likeRouter = express.Router();
 
 // Add Like
-likeRouter.post('/add',
+likeRouter.post(
+  "/add",
   addLikeValidation,
   handleValidationErrors,
   async (req, res) => {
@@ -29,14 +30,21 @@ likeRouter.post('/add',
 );
 
 // Get Likes by User
-likeRouter.get('/by-user/:liker_id',
+likeRouter.get(
+  "/by-user/:liker_id",
   getLikesByUserValidation,
   handleValidationErrors,
   async (req, res) => {
     try {
       const likes = await Like.findAll({
         where: { liker_id: req.params.liker_id },
-        include: [{ model: User, as: 'likedUser', attributes: ['id', 'username', 'email'] }]
+        include: [
+          {
+            model: User,
+            as: "likedUser",
+            attributes: ["id", "username", "email"],
+          },
+        ],
       });
 
       successResponse(res, "Likes by user", likes, 200);
@@ -48,14 +56,21 @@ likeRouter.get('/by-user/:liker_id',
 );
 
 // Get Users Who Liked a User
-likeRouter.get('/liked-by/:liked_id',
+likeRouter.get(
+  "/liked-by/:liked_id",
   getLikedByValidation,
   handleValidationErrors,
   async (req, res) => {
     try {
       const likes = await Like.findAll({
         where: { liked_id: req.params.liked_id },
-        include: [{ model: User, as: 'likerUser', attributes: ['id', 'username', 'email'] }]
+        include: [
+          {
+            model: User,
+            as: "likerUser",
+            attributes: ["id", "username", "email"],
+          },
+        ],
       });
 
       successResponse(res, "Users who liked this user", likes, 200);
@@ -67,7 +82,8 @@ likeRouter.get('/liked-by/:liked_id',
 );
 
 // Delete Like
-likeRouter.delete('/:id',
+likeRouter.delete(
+  "/:id",
   deleteLikeValidation,
   handleValidationErrors,
   async (req, res) => {

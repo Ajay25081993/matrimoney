@@ -11,9 +11,7 @@ export const showSuccessToast = (message, navigateTo, pageUrl="") => {
     progress: undefined,
     theme: "light",
     transition: Bounce,
-    onClose: () => {
-      console.log(pageUrl);
-      
+    onClose: () => {  
       if (pageUrl==="") {
        return
       }

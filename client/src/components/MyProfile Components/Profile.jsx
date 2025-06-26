@@ -19,9 +19,6 @@ const Profile = () => {
         const infoResponse = await axiosInstance.get(
           `${API_URLS.GET_INFO_BY_USER_ID}/${user_id}`
         );
-        console.log(dataResponse);
-        console.log(infoResponse);
-
         setUserInfo(infoResponse.data[0]);
         setUserData(dataResponse.data[0]);
       } catch (err) {

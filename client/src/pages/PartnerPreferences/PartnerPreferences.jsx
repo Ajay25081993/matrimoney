@@ -49,7 +49,7 @@ const PartnerPreferences = () => {
         openPartnerPreferences={openPartnerPreferences}
         setOpenPartnerPreferences={setOpenPartnerPreferences}
       />
-      <div className="pt-[110px] relative flex justify-center gap-8 py-17 ">
+      <div className="pt-[110px] relative flex  gap-8 py-17 ">
         <Sidebar onOptionClick={scrollToSection} />
         <Editingsides scrollTargets={scrollTargets} />
       </div>

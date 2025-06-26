@@ -6,6 +6,8 @@ import { Loader } from "lucide-react";
 // import { useAuthStore } from "./store/useAuthStore";
 import PrivateRoute from "./components/Private Route/PrivateRoute";
 import { privateRoutes } from "./components/Private Route/privateRoutes";
+import GenerateQR from "./components/GenerateQR";
+import QRScanner from "./components/QRScanner";
 
 const Landing = lazy(() => import("./pages/Landing"));
 const MyProfile = lazy(() => import("./pages/My Profile/MyProfile"));
@@ -17,8 +19,8 @@ const PartnerPreferences = lazy(() =>
 );
 const Home = lazy(() => import("./pages/Home/Home"));
 const Matches = lazy(() => import("./pages/Matches/Matches"));
+const UserProfilePage = lazy(() => import("./pages/User's Profile/UserProfilePage"));
 const FamilyDetails = lazy(() => import("./pages/FamilyDetails/FamilyDetails"));
-const UploadPhoto = lazy(() => import("./pages/Upload Photo/UploadPhoto"));
 const Hobby = lazy(() => import("./pages/Hobbies&Interests/Hobby"));
 const ProfilePreview = lazy(() =>
   import("./pages/Profile Preview/ProfilePreview")
@@ -32,17 +34,34 @@ const App = () => {
   const componentsMap = {
     Home,
     Matches,
+    UserProfilePage,
     More,
     Settings,
     MyPhotos,
     FamilyDetails,
-    UploadPhoto,
     Hobby,
     ProfilePreview,
     CreateProfile,
     Inbox,
     MyProfile,
     PartnerPreferences,
+  };
+  const stepsMap = {
+    "/profile-creation/about-me": "about-me",
+    "/profile-creation/family-details": "family-details",
+    "/profile-creation/upload-photo": "upload-photo",
+    "/matches/all-matches": "all-matches",
+    "/matches/photo-matches": "photo-matches",
+    "/matches/profiles-with-horoscope": "profiles-with-horoscope",
+    "/matches/hobby-matches": "hobby-matches",
+  };
+  const user = {
+    name: "Rudra Deb",
+    age: 24,
+    height: "5'9\"",
+    weight: "72 kg",
+    imageUrl:
+      "https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?ga=GA1.1.1426186378.1750559581&semt=ais_items_boosted&w=740", // replace with real profile pic URL
   };
   // useEffect(() => {
   //   checkAuth();
@@ -66,39 +85,18 @@ const App = () => {
       >
         <Routes>
           <Route path="/" element={<Landing />} />
+
           {privateRoutes.map(({ path, component }) => {
             const Component = componentsMap[component];
-            if (path === "/profile-creation/about-me")
-              return (
-                <Route
-                  key={path}
-                  path={path}
-                  element={
-                    <PrivateRoute>
-                      <Component steps={"about-me"} />
-                    </PrivateRoute>
-                  }
-                />
-              );
-            if (path === "/profile-creation/family-details")
-              return (
-                <Route
-                  key={path}
-                  path={path}
-                  element={
-                    <PrivateRoute>
-                      <Component steps={"family-details"} />
-                    </PrivateRoute>
-                  }
-                />
-              );
+            const step = stepsMap[path];
+
             return (
               <Route
                 key={path}
                 path={path}
                 element={
                   <PrivateRoute>
-                    <Component />
+                    <Component {...(step ? { steps: step } : {})} />
                   </PrivateRoute>
                 }
               />

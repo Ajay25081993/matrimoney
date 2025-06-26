@@ -9,8 +9,9 @@ import { API_URLS } from "../../constants/apiUrls";
 import { useNavigate } from "react-router-dom";
 import { toast, Bounce } from "react-toastify";
 import { monthNames } from "./monthName";
-import { useAuthStore } from "../../store/useAuthStore";
+// import { useAuthStore } from "../../store/useAuthStore";
 import { calculateAge } from "../../components/MyProfile Components/ageCalculate";
+import { showSuccessToast } from "../../lib/toast";
 const Register = ({ showRegister, setShowRegister }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [showGender, setShowGender] = useState(false);
@@ -29,13 +30,13 @@ const Register = ({ showRegister, setShowRegister }) => {
       month: "",
       year: "",
     },
-    religion: "Other",
-    community: "Others",
-    state: "Delhi",
+    religion: "Select",
+    community: "Select",
+    state: "Select",
     email: "",
     phoneNo: "",
     password: "",
-    age:""
+    age: "",
   };
   const [userData, setUserData] = useState(initialUserData);
 
@@ -63,44 +64,42 @@ const Register = ({ showRegister, setShowRegister }) => {
       gender: updateGender,
       dob: dobFormatted,
       createdFor: createdFor,
-      age:calculateAge(dobFormatted)
+      age: calculateAge(dobFormatted),
     };
 
     setUserData(updatedUserData);
+    localStorage.setItem("gender",updateGender)
+    navigateTo("/profile-creation/step/1")
 
     try {
       const response = await axiosInstance.post(
         API_URLS.REGISTER,
         updatedUserData
       );
-      console.log("Res", response);
 
       if (response.data[0].access_token) {
         localStorage.setItem("token", response.data[0].access_token);
         setRegistered(true);
 
-        const { checkAuth } = useAuthStore.getState();
-        await checkAuth();
+        // const { checkAuth } = useAuthStore.getState();
+        // await checkAuth();
 
-        toast.success(response.message, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-          onClose: () => {
-            navigateTo("/profile-creation/step/1");
-          },
-        });
+        // toast.success(response.message, {
+        //   position: "top-center",
+        //   autoClose: 2000,
+        //   hideProgressBar: false,
+        //   closeOnClick: false,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        //   transition: Bounce,
+        //   onClose: () => {
+        //     navigateTo("/profile-creation/step/1");
+        //   },
+        // });
+        showSuccessToast(response.message,navigateTo,"/profile-creation/step/1")
 
-        // Navigate after toast
-        // setTimeout(() => {
-
-        // }, 2100);
       } else {
         toast.success(response.message, {
           position: "top-center",
@@ -169,7 +168,7 @@ const Register = ({ showRegister, setShowRegister }) => {
                   setSelectedOption("");
                   setShowGender(false);
                 }}
-                className="cursor-pointer ri-arrow-left-long-line text-3xl absolute left-8 top-8 m-2 text-gray-500 "
+                className="cursor-pointer ri-arrow-left-long-line text-2xl absolute left-8 top-8 m-2 text-gray-500 "
               ></i>
               <div className="w-full flex justify-center">
                 <i className="ri-user-3-fill text-amber-400 w-18 h-18 text-4xl flex justify-center items-center bg-amber-200 rounded-full"></i>

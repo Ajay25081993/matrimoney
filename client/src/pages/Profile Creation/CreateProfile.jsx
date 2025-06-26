@@ -11,10 +11,15 @@ import { API_URLS } from "../../constants/apiUrls";
 import { Bounce, toast } from "react-toastify";
 import FamilyDetails from "../FamilyDetails/FamilyDetails";
 import Family from "../../components/Family/Family";
+import PhotoUpload from "../../components/PhotoUpload/PhotoUpload";
+import { showErrorToast, showSuccessToast } from "../../lib/toast";
 
 const CreateProfile = ({ steps }) => {
   const navigateTo = useNavigate();
   const { step } = useParams();
+
+  const gender = localStorage.getItem("gender");
+
   const [formData, setFormData] = useState({
     language: [],
     languageKnown: "",
@@ -56,37 +61,14 @@ const CreateProfile = ({ steps }) => {
 
       const response = await axiosInstance.post(
         API_URLS.ADD_INFO,
-        updatedUserInfo 
+        updatedUserInfo
       );
       console.log("Res", response);
 
       if (response.data[0].length) {
-        toast.success(response.message, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-          onClose: () => {
-            navigateTo("/home");
-          },
-        });
+        showSuccessToast(response.message, navigateTo, "/home");
       } else {
-        toast.success(response.message, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        });
+        showErrorToast(response.message);
       }
     } catch (error) {
       console.error("Profile creation error:", error);
@@ -106,11 +88,10 @@ const CreateProfile = ({ steps }) => {
         <AboutMe formData={formData} setFormData={setFormData} />
       )}
       {steps === "family-details" && (
-        <Family
-          formData={formData}
-          setFormData={setFormData}
-          handleSubmit={handleSubmit}
-        />
+        <Family formData={formData} setFormData={setFormData} />
+      )}
+      {steps === "upload-photo" && (
+        <PhotoUpload gender={gender} handleSubmit={handleSubmit} />
       )}
       <Footer2 />
     </div>

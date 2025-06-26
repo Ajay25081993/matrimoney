@@ -1,12 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { calculateAge } from "./ageCalculate";
 import EditBasicDetails from "./Edit/EditBasicDetails";
+import weights from "./weight";
 
 const BasicDetails = ({ userData, userInfo }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    bodyType: userInfo.bodyType || "",
+    drinkingHabit: "",
+    smokingHabit: "",
+    physicalStatus: "",
+  });
 
+  useEffect(() => {
+    if (userInfo) {
+      setFormData({
+        bodyType: userInfo.bodyType || "",
+        drinkingHabit: userInfo.drinkingHabit || "",
+        smokingHabit: userInfo.smokingHabit || "",
+        physicalStatus: "",
+      });
+    }
+  }, [userInfo]);
+
+  const [add, setAdd] = useState({
+    openBodyType: false,
+    openPhysicalStatus: false,
+    openWeight: false,
+    openDrinkingHabit: false,
+    openSmokingHabit: false,
+  });
+  const cancelAction = () => {
+    setAdd({
+      ...add,
+      openBodyType: false,
+      openPhysicalStatus: false,
+      openWeight: false,
+      openDrinkingHabit: false,
+      openSmokingHabit: false,
+    });
+  };
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
   return (
-    <div className={`profileComponent !gap-0 `}>
+    <div className={`profileComponent !gap-0   `}>
       <div
         className={` transition-all duration-1000 overflow-hidden ${
           isEditing ? "opacity-0 translate-y-20" : "opacity-100 translate-y-0"
@@ -22,7 +60,17 @@ const BasicDetails = ({ userData, userInfo }) => {
                   Basic Details{" "}
                 </p>
                 <button
-                  onClick={() => setIsEditing(!isEditing)}
+                  onClick={() => {
+                    setIsEditing(!isEditing);
+                    setAdd({
+                      ...add,
+                      openBodyType: false,
+                      openPhysicalStatus: false,
+                      openWeight: false,
+                      openDrinkingHabit: false,
+                      openSmokingHabit: false,
+                    });
+                  }}
                   className="bg-blue-500 text-white px-1 text-sm rounded-sm cursor-pointer"
                 >
                   <span>
@@ -42,13 +90,13 @@ const BasicDetails = ({ userData, userInfo }) => {
               </div>
             </div>
             <div className="w-full h-[0.5px] bg-gray-400"></div>
-            <div className="flex w-full gap-20 items-center">
-              <div className="w-1/2 flex justify-between">
+            <div className="flex w-full gap-20 items-center relative">
+              <div className="w-1/2 flex gap-7">
                 <div className="space-y-1 ">
                   <div className="py-1">Profile created for</div>
                   <div className="py-1">Body Type</div>
                   <div className="py-1">Physical Status</div>
-                  <div className="py-1">Weight</div>
+                  <div className="py-1">Weight</div>    
                   <div className="py-1">Marital Status</div>
                   <div className="py-1">Drinking Habits</div>
                 </div>
@@ -57,37 +105,273 @@ const BasicDetails = ({ userData, userInfo }) => {
                   <div className="py-1">: {userData.createdFor}</div>
                   <div className="py-1">
                     :
-                    {userInfo.bodyType ? (
-                      <span> {userInfo.bodyType}</span>
+                    {formData.bodyType ? (
+                      <span> {formData.bodyType}</span>
                     ) : (
-                      <span className="text-blue-500 text-center text-sm cursor-pointer">
+                      <span
+                        onClick={() => {
+                          setAdd({
+                            ...add,
+                            openBodyType: true,
+                            openPhysicalStatus: false,
+                            openWeight: false,
+                            openDrinkingHabit: false,
+                            openSmokingHabit: false,
+                          });
+                        }}
+                        className="text-blue-500 text-center text-sm cursor-pointer"
+                      >
                         <span> Add Body Type</span>{" "}
                         <i className="ri-arrow-right-s-fill "></i>
                       </span>
                     )}
+                    {add.openBodyType && (
+                      <div className="absolute top-16.5 w-85 h-35 shadow-[4px_4px_5px_rgba(1,1,1,0.6)]  bg-gray-50 border-2 border-purple-400 rounded-md">
+                        <i class="ri-arrow-up-s-fill absolute -top-5 text-2xl text-purple-500"></i>
+                        <div className="flex justify-end w-full p-1">
+                          <i
+                            onClick={() => {
+                              cancelAction();
+                            }}
+                            className="ri-close-line text-gray-400 flex items-center justify-center border-1 border-gray-500 h-4 w-4 cursor-pointer"
+                          ></i>
+                        </div>
+                        <div className="p-3 space-y-3">
+                          <p>Body Type :</p>
+                          {["Slim", "Athletic", "Average", "Heavy"].map(
+                            (type) => (
+                              <label key={type} className="mr-2">
+                                <input
+                                  className="mr-1"
+                                  type="radio"
+                                  name="bodyType"
+                                  value={type}
+                                  checked={formData.bodyType === type}
+                                  onChange={() =>
+                                    handleChange("bodyType", type)
+                                  }
+                                />
+                                {type}
+                              </label>
+                            )
+                          )}
+                          <div className="flex justify-end mt-2 gap-2">
+                            <button className="border-1 border-gray-300 rounded-md px-2 cursor-pointer">
+                              Save
+                            </button>
+                            <button
+                              onClick={() => {
+                                cancelAction();
+                              }}
+                              className="border-1 border-gray-300 rounded-md px-2 cursor-pointer"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div className="py-1">: Normal</div>
+                  <div className="py-1">
+                    :{" "}
+                    {formData.physicalStatus ? (
+                      <span> {formData.physicalStatus}</span>
+                    ) : (
+                      <span
+                        onClick={() => {
+                          setAdd({
+                            ...add,
+                            openBodyType: false,
+                            openPhysicalStatus: true,
+                            openWeight: false,
+                            openDrinkingHabit: false,
+                            openSmokingHabit: false,
+                          });
+                        }}
+                        className="text-blue-500 text-center text-sm cursor-pointer"
+                      >
+                        <span> Add Physical Status</span>{" "}
+                        <i className="ri-arrow-right-s-fill "></i>
+                      </span>
+                    )}
+                    {add.openPhysicalStatus && (
+                      <div className="absolute -top-16 w-85 h-35 shadow-[4px_0px_5px_rgba(1,1,1,0.6)]  bg-gray-50 border-2 border-purple-400 rounded-md">
+                        <i class="ri-arrow-down-s-fill absolute -bottom-5 text-2xl text-purple-500"></i>
+                        <div className="flex justify-end w-full p-1">
+                          <i
+                            onClick={() => {
+                              cancelAction();
+                            }}
+                            className="ri-close-line text-gray-400 flex items-center justify-center border-1 border-gray-500 h-4 w-4 cursor-pointer"
+                          ></i>
+                        </div>
+                        <div className="p-3 space-y-3">
+                          <p>Physical Status :</p>
+                          {["Normal", "Physically Challanged"].map((type) => (
+                            <label key={type} className=" mr-2">
+                              <input
+                                className="mr-1"
+                                type="radio"
+                                name="physicalStatus "
+                                value={type}
+                                checked={formData.physicalStatus === type}
+                                onChange={() =>
+                                  handleChange("physicalStatus", type)
+                                }
+                              />
+                              {type}
+                            </label>
+                          ))}
+                          <div className="flex justify-end mt-2 gap-2">
+                            <button className="border-1 border-gray-300 rounded-md px-2 ">
+                              Save
+                            </button>
+                            <button
+                              onClick={() => {
+                                cancelAction();
+                              }}
+                              className="border-1 border-gray-300 rounded-md px-2 "
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   <div className="py-1">
                     :
-                    {userInfo.weight ? (
-                      <span> {userInfo.weight}</span>
+                    {formData.weight ? (
+                      <span> {formData.weight}</span>
                     ) : (
-                      <span className="text-blue-500 text-center text-sm cursor-pointer">
+                      <span
+                        onClick={() => {
+                          setAdd({
+                            ...add,
+                            openBodyType: false,
+                            openPhysicalStatus: false,
+                            openWeight: true,
+                            openDrinkingHabit: false,
+                            openSmokingHabit: false,
+                          });
+                        }}
+                        className="text-blue-500 text-center text-sm cursor-pointer"
+                      >
                         <span> Add Weight</span>{" "}
                         <i className="ri-arrow-right-s-fill "></i>
                       </span>
+                    )}
+                    {add.openWeight && (
+                      <div className="absolute -top-6 w-85 h-35 shadow-[4px_0px_5px_rgba(1,1,1,0.6)]  bg-gray-50 border-2 border-purple-400 rounded-md">
+                        <i class="ri-arrow-down-s-fill absolute -bottom-5 text-2xl text-purple-500"></i>
+                        <div className="flex justify-end w-full p-1">
+                          <i
+                            onClick={() => {
+                              cancelAction();
+                            }}
+                            className="ri-close-line text-gray-400 flex items-center justify-center border-1 border-gray-500 h-4 w-4 cursor-pointer"
+                          ></i>
+                        </div>
+                        <div className="p-3 space-y-1">
+                          <p>Weight:</p>
+                          <select
+                            value={formData.weight}
+                            onChange={(e) =>
+                              handleChange("weight", e.target.value)
+                            }
+                            className="border border-gray-300 rounded-md px-2 py-1"
+                          >
+                            <option value="">Select Weight</option>
+                            {weights.map((weight) => (
+                              <option key={weight} value={weight}>
+                                {weight}
+                              </option>
+                            ))}
+                          </select>
+
+                          <div className="flex justify-end  gap-2">
+                            <button className="border border-gray-300 rounded-md px-2">
+                              Save
+                            </button>
+                            <button
+                              onClick={() => cancelAction()}
+                              className="border border-gray-300 rounded-md px-2"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </div>
                   <div className="py-1">: {userInfo.maritalStatus}</div>
                   <div className="py-1">
                     :
-                    {userInfo.bodyType ? (
-                      <span> {userInfo.bodyType}</span>
+                    {/* {userInfo.drinkingHabits ? (
+                      <span> {userInfo.drinkingHabits}</span>
+                    ) : ( */}
+                    {formData.drinkingHabit ? (
+                      <span> {formData.drinkingHabit}</span>
                     ) : (
-                      <span className="text-blue-500 text-center text-sm cursor-pointer ">
+                      <span
+                        onClick={() => {
+                          setAdd({
+                            ...add,
+                            openBodyType: false,
+                            openPhysicalStatus: false,
+                            openWeight: false,
+                            openDrinkingHabit: true,
+                            openSmokingHabit: false,
+                          });
+                        }}
+                        className="text-blue-500 text-center text-sm cursor-pointer "
+                      >
                         <span> Add Drinking Habits</span>{" "}
                         <i className="ri-arrow-right-s-fill "></i>
                       </span>
+                    )}
+                    {add.openDrinkingHabit && (
+                      <div className="absolute top-12 w-85 h-35 shadow-[4px_0px_5px_rgba(1,1,1,0.6)]  bg-gray-50 border-2 border-purple-400 rounded-md">
+                        <i class="ri-arrow-down-s-fill absolute -bottom-5 text-2xl text-purple-500"></i>
+                        <div className="flex justify-end w-full p-1">
+                          <i
+                            onClick={() => {
+                              cancelAction();
+                            }}
+                            className="ri-close-line text-gray-400 flex items-center justify-center border-1 border-gray-500 h-4 w-4 cursor-pointer"
+                          ></i>
+                        </div>
+                        <div className="p-3 space-y-1">
+                          <p>Drinking Habits:</p>
+                          {["Yes", "No", "Occasionally"].map((type) => (
+                            <label key={type} className="mr-2">
+                              <input
+                                className="mr-1"
+                                type="radio"
+                                name="drinkingHabit"
+                                value={type}
+                                checked={formData.drinkingHabit === type}
+                                onChange={() =>
+                                  handleChange("drinkingHabit", type)
+                                }
+                              />
+                              {type}
+                            </label>
+                          ))}
+
+                          <div className="flex justify-end mt-3 gap-2">
+                            <button className="border border-gray-300 rounded-md px-2">
+                              Save
+                            </button>
+                            <button
+                              onClick={() => cancelAction()}
+                              className="border border-gray-300 rounded-md px-2"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -111,26 +395,71 @@ const BasicDetails = ({ userData, userInfo }) => {
                   </div>
                   <div className="py-1">: {userInfo.height}</div>{" "}
                   <div className="py-1">: {userInfo.languageKnown}</div>{" "}
+                  <div className="py-1">: {userInfo.diet}</div>{" "}
                   <div className="py-1">
                     :
-                    {userInfo.bodyType ? (
-                      <span> {userInfo.bodyType}</span>
+                    {formData.smokingHabit ? (
+                      <span> {formData.smokingHabit}</span>
                     ) : (
-                      <span className="text-blue-500 text-center text-sm  cursor-pointer">
-                        <span> Add Eating Habits</span>{" "}
-                        <i className="ri-arrow-right-s-fill "></i>
-                      </span>
-                    )}
-                  </div>{" "}
-                  <div className="py-1">
-                    :
-                    {userInfo.bodyType ? (
-                      <span> {userInfo.bodyType}</span>
-                    ) : (
-                      <span className="text-blue-500 text-center text-sm cursor-pointer">
+                      <span
+                        onClick={() => {
+                          setAdd({
+                            ...add,
+                            openBodyType: false,
+                            openPhysicalStatus: false,
+                            openWeight: false,
+                            openDrinkingHabit: false,
+                            openSmokingHabit: true,
+                          });
+                        }}
+                        className="text-blue-500 text-center text-sm cursor-pointer"
+                      >
                         <span> Add smoking Habits</span>{" "}
                         <i className="ri-arrow-right-s-fill "></i>
                       </span>
+                    )}
+                    {add.openSmokingHabit && (
+                      <div className="absolute top-12 right-10 w-85 h-35 shadow-[4px_0px_5px_rgba(1,1,1,0.6)]  bg-gray-50 border-2 border-purple-400 rounded-md">
+                        <i class="ri-arrow-down-s-fill absolute -bottom-5 right-0 text-2xl text-purple-500"></i>
+                        <div className="flex justify-end w-full p-1">
+                          <i
+                            onClick={() => {
+                              cancelAction();
+                            }}
+                            className="ri-close-line text-gray-400 flex items-center justify-center border-1 border-gray-500 h-4 w-4 cursor-pointer"
+                          ></i>
+                        </div>
+                        <div className="p-3 space-y-1">
+                          <p>Smoking Habits:</p>
+                          {["Yes", "No", "Occasionally"].map((type) => (
+                            <label key={type} className="mr-2">
+                              <input
+                                className="mr-1"
+                                type="radio"
+                                name="smokingHabit"
+                                value={type}
+                                checked={formData.smokingHabit === type}
+                                onChange={() =>
+                                  handleChange("smokingHabit", type)
+                                }
+                              />
+                              {type}
+                            </label>
+                          ))}
+
+                          <div className="flex justify-end mt-3 gap-2">
+                            <button className="border border-gray-300 rounded-md  px-2">
+                              Save
+                            </button>
+                            <button
+                              onClick={() => cancelAction()}
+                              className="border border-gray-300 rounded-md px-2"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -168,7 +497,7 @@ export default BasicDetails;
 //     bodyType: "",
 //     eatingHabits: [],
 //     drinkingHabits: [],
-//     smokingHabits: [],
+//     smokingHabit: [],
 //   });
 
 //   // Update formData when props change
@@ -184,7 +513,7 @@ export default BasicDetails;
 //         bodyType: userInfo.bodyType || "",
 //         eatingHabits: [],
 //         drinkingHabits: [],
-//         smokingHabits: [],
+//         smokingHabit: [],
 //       });
 //     }
 //   }, [userData, userInfo]);
@@ -358,8 +687,8 @@ export default BasicDetails;
 //                 <input
 //                   type="checkbox"
 //                   value={habit}
-//                   checked={formData.smokingHabits.includes(habit)}
-//                   onChange={() => handleArrayToggle("smokingHabits", habit)}
+//                   checked={formData.smokingHabit.includes(habit)}
+//                   onChange={() => handleArrayToggle("smokingHabit", habit)}
 //                 />{" "}
 //                 {habit}
 //               </label>

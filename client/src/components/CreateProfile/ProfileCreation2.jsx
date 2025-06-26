@@ -53,6 +53,7 @@ const ProfileCreation2 = ({ formData, setFormData }) => {
       ),
     }))
     .filter((cat) => cat.degrees.length > 0);
+
   const filteredJobPost = professionCategoriesData
     .map((professionCategory) => ({
       ...professionCategory,
@@ -149,12 +150,20 @@ const ProfileCreation2 = ({ formData, setFormData }) => {
             {/* College Name */}
             {formData.highestQualification && (
               <TextField
-                error={showError("college") || formData.college.length < 10&&formData.college.length!=0}
+                error={
+                  showError("college") ||
+                  (formData.college.length < 10 && formData.college.length != 0)
+                }
                 required
                 label="Your college name(Highest degree)"
                 placeholder="Enter your college name"
                 value={formData.college}
-                onChange={(e) => handleChange("college", e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // allow only letters and spaces
+                  const onlyLetters = value.replace(/[^a-zA-Z\s]/g, "");
+                  handleChange("college", onlyLetters);
+                }}
                 onBlur={() =>
                   setTouched((prev) => ({ ...prev, college: true }))
                 }
@@ -162,7 +171,8 @@ const ProfileCreation2 = ({ formData, setFormData }) => {
                 helperText={
                   showError("city")
                     ? "Please enter your city"
-                    : formData.college.length < 10&&formData.college.length!=0
+                    : formData.college.length < 10 &&
+                      formData.college.length != 0
                     ? "College name must be at least 10 characters"
                     : ""
                 }
@@ -209,26 +219,28 @@ const ProfileCreation2 = ({ formData, setFormData }) => {
 
             {/* Work As */}
 
-            {formData.workWith && formData.workWith !== "Not Working"&&formData.workWith !== "Business / Self Employed" && (
-              <div>
-                <TextField
-                  error={showError("workAs")}
-                  required
-                  label="As"
-                  value={formData.workAs}
-                  onChange={(e) => {
-                    handleChange("workAs", e.target.value);
-                    setSearchTerm(e.target.value);
-                    setShowProffesion(true);
-                  }}
-                  onBlur={() =>
-                    setTouched((prev) => ({ ...prev, workAs: true }))
-                  }
-                  variant="standard"
-                  helperText={showError("workAs") ? "Please select one" : ""}
-                />
+            {formData.workWith &&
+              formData.workWith !== "Not Working" &&
+              formData.workWith !== "Business / Self Employed" && (
+                <div>
+                  <TextField
+                    error={showError("workAs")}
+                    required
+                    label="As"
+                    value={formData.workAs}
+                    onChange={(e) => {
+                      handleChange("workAs", e.target.value);
+                      setSearchTerm(e.target.value);
+                      setShowProffesion(true);
+                    }}
+                    onBlur={() =>
+                      setTouched((prev) => ({ ...prev, workAs: true }))
+                    }
+                    variant="standard"
+                    helperText={showError("workAs") ? "Please select one" : ""}
+                  />
 
-                {/* {showProffesion && (
+                  {/* {showProffesion && (
                 <div className="bg-gray-200 shadow-md shadow-gray-500 rounded-md w-full overflow-auto h-50 ml-2 px-1">
                   {professionCategoriesData.map((profession) => {
                     return (
@@ -243,22 +255,22 @@ const ProfileCreation2 = ({ formData, setFormData }) => {
                   })}
                 </div>
               )} */}
-                {showProffesion && (
-                  <div className="bg-gray-200 shadow-md shadow-gray-500 rounded-md w-full overflow-auto h-50 ml-2 p-1">
-                    {filteredJobPost.map((profession, index) => (
-                      <Options
-                        key={index}
-                        category={profession.category}
-                        proffesion={profession.professions}
-                        handleChange={handleChange}
-                        field={"workAs"}
-                        setShowDegrees={setShowProffesion}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
+                  {showProffesion && (
+                    <div className="bg-gray-200 shadow-md shadow-gray-500 rounded-md w-full overflow-auto h-50 ml-2 p-1">
+                      {filteredJobPost.map((profession, index) => (
+                        <Options
+                          key={index}
+                          category={profession.category}
+                          proffesion={profession.professions}
+                          handleChange={handleChange}
+                          field={"workAs"}
+                          setShowDegrees={setShowProffesion}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
 
             {/* Company Name */}
             {formData.workAs && (
@@ -268,7 +280,12 @@ const ProfileCreation2 = ({ formData, setFormData }) => {
                 label="Your company name(current)"
                 placeholder="Enter your company name"
                 value={formData.company}
-                onChange={(e) => handleChange("company", e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // allow only letters and spaces
+                  const onlyLetters = value.replace(/[^a-zA-Z\s]/g, "");
+                  handleChange("company", onlyLetters);
+                }}
                 onBlur={() =>
                   setTouched((prev) => ({ ...prev, company: true }))
                 }
@@ -276,7 +293,6 @@ const ProfileCreation2 = ({ formData, setFormData }) => {
                 helperText={
                   showError("company") ? "Please enter your company name" : ""
                 }
-                
               />
             )}
 

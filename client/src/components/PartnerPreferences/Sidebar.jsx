@@ -3,7 +3,7 @@ import { allFields } from "./field";
 
 const Sidebar = ({ onOptionClick }) => {
   return (
-    <div className="rounded-sm w-80 border-1 fixed top-37 left-20  bg-[#a261fc] p-8 text-white h-150">
+    <div className="rounded-sm w-80 border-1 fixed top-37 left-40  bg-[#a261fc] p-8 text-white h-150">
       <div className="space-y-10">
         <div className="text-sm font-semibold mb-2 flex gap-2 items-center">
           <i className="ri-hearts-line text-2xl"></i>

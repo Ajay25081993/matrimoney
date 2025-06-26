@@ -67,7 +67,7 @@ const Header = ({
 
           <div className="cursor-pointer flex  items-center gap-1">
             <i className="ri-group-2-fill  text-xl mt-1"></i>
-           <Link to='/matches'>
+           <Link to='/matches/all-matches'>
 
            <span>
               Matches

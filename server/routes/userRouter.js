@@ -44,8 +44,6 @@ userRouter.get(
   validate,
   async (req, res) => {
     try {
-      console.log("params", req.params);
-
       const user = await User.findOne({
         where: { id: req.params.user_id },
         include: [{ model: Info, as: "Info" }],

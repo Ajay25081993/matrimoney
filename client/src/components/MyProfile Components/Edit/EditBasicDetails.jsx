@@ -6,13 +6,7 @@ import { weights } from "../../CreateProfile/weights";
 import { maritalStatus } from "../../CreateProfile/maritalStatus";
 import { languages } from "../../CreateProfile/language";
 
-const EditBasicDetails = ({
-  userData,
-  userInfo,
-  onSave,
-  isEditing,
-  setIsEditing,
-}) => {
+const EditBasicDetails = ({ userData, userInfo, isEditing, setIsEditing }) => {
   const [formData, setFormData] = useState({
     name: "",
     age: "",
@@ -21,9 +15,9 @@ const EditBasicDetails = ({
     weight: "",
     maritalStatus: "",
     bodyType: "",
-    eatingHabits: "",
-    drinkingHabits: "",
-    smokingHabits: "",
+    diet: "",
+    drinkingHabit: "",
+    smokingHabit: "",
     motherTongue: "",
     physicalStatus: "",
   });
@@ -38,9 +32,9 @@ const EditBasicDetails = ({
         weight: userInfo.weight || "",
         maritalStatus: userInfo.maritalStatus || "",
         bodyType: userInfo.bodyType || "",
-        eatingHabits: "",
-        drinkingHabits: "",
-        smokingHabits: "",
+        diet: "",
+        drinkingHabit: "",
+        smokingHabit: "",
         motherTongue: "",
         physicalStatus: "",
       });
@@ -52,9 +46,8 @@ const EditBasicDetails = ({
   };
 
   const handleSave = () => {
-    console.log("Basic Details:",formData);
+    console.log("Basic Details:", formData);
 
-    // if (onSave) onSave(formData);
     setIsEditing(false);
   };
 
@@ -213,10 +206,10 @@ const EditBasicDetails = ({
                 <label key={habit}>
                   <input
                     type="radio"
-                    name="eatingHabits"
+                    name="diet"
                     value={habit}
-                    checked={formData.eatingHabits === habit}
-                    onChange={() => handleChange("eatingHabits", habit)}
+                    checked={formData.diet === habit}
+                    onChange={() => handleChange("diet", habit)}
                   />{" "}
                   {habit}
                 </label>
@@ -231,10 +224,10 @@ const EditBasicDetails = ({
               <label key={habit}>
                 <input
                   type="radio"
-                  name="drinkingHabits"
+                  name="drinkingHabit"
                   value={habit}
-                  checked={formData.drinkingHabits === habit}
-                  onChange={() => handleChange("drinkingHabits", habit)}
+                  checked={formData.drinkingHabit === habit}
+                  onChange={() => handleChange("drinkingHabit", habit)}
                 />{" "}
                 {habit}
               </label>
@@ -248,10 +241,10 @@ const EditBasicDetails = ({
               <label key={habit}>
                 <input
                   type="radio"
-                  name="smokingHabits"
+                  name="smokingHabit"
                   value={habit}
-                  checked={formData.smokingHabits === habit}
-                  onChange={() => handleChange("smokingHabits", habit)}
+                  checked={formData.smokingHabit === habit}
+                  onChange={() => handleChange("smokingHabit", habit)}
                 />{" "}
                 {habit}
               </label>

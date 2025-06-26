@@ -1,11 +1,26 @@
 import React from "react";
+import { API_URLS } from "../../../constants/apiUrls";
+import axiosInstance from "../../../lib/axios";
 
-const EditAbout = ({ userInfo, isEditing, setIsEditing ,onSave,aboutText, setAboutText}) => {
-
-  const handleSave = () => {
-    console.log("About:",aboutText);
-    
-    setIsEditing(false);
+const EditAbout = ({
+  userInfo,
+  isEditing,
+  setIsEditing,
+  aboutText,
+  setAboutText,
+}) => {
+  const handleSave = async () => {
+    try {
+      const editResponse = await axiosInstance.put(
+        `${API_URLS.EDIT_INFO}/${userInfo.user_id}`,
+        { aboutText }
+      );
+      console.log(editResponse.data[0].aboutMe);
+      setAboutText(aboutText);
+      setIsEditing(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleCancel = () => {

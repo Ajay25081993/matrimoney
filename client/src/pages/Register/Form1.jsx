@@ -32,12 +32,14 @@ const Form1 = ({ onNext, onBack, userData, setUserData }) => {
 
   return (
     <div>
-      <i
-        onClick={onBack}
-        className="ri-arrow-left-long-line text-2xl cursor-pointer text-gray-500"
-      ></i>
-      <div className="w-full flex justify-center">
-        <i className="ri-user-3-fill text-purple-500 w-18 h-18 text-5xl text-shadow-md text-shadow-purple-400 flex justify-center items-center bg-purple-200 rounded-full"></i>
+      <div className="flex justify-center">
+        <i
+          onClick={onBack}
+          className="ri-arrow-left-long-line text-2xl cursor-pointer text-gray-500"
+        ></i>
+        <div className="w-full flex justify-center mr-5">
+          <i className="ri-user-3-fill text-purple-500  w-18 h-18 text-4xl text-shadow-md text-shadow-purple-400 flex justify-center items-center bg-purple-200 rounded-full"></i>
+        </div>
       </div>
 
       <Box
@@ -65,7 +67,8 @@ const Form1 = ({ onNext, onBack, userData, setUserData }) => {
               className="!w-120"
               error={touched.firstName && Boolean(errors.firstName)}
               onChange={(e) => {
-                const value = e.target.value.replace(/\s/g, ""); // remove all spaces
+                const rawValue = e.target.value;
+                const value = rawValue.replace(/[^A-Za-z]/g, ""); // allow only letters (A-Z, a-z)
                 setUserData({ ...userData, firstName: value });
               }}
               onBlur={() => handleBlur("firstName")}
@@ -79,7 +82,8 @@ const Form1 = ({ onNext, onBack, userData, setUserData }) => {
               className="!w-120"
               error={touched.lastName && Boolean(errors.lastName)}
               onChange={(e) => {
-                const value = e.target.value.replace(/\s/g, ""); // remove all spaces
+                const rawValue = e.target.value;
+                const value = rawValue.replace(/[^A-Za-z]/g, ""); // allow only letters (A-Z, a-z)
                 setUserData({ ...userData, lastName: value });
               }}
               onBlur={() => handleBlur("lastName")}
@@ -95,10 +99,13 @@ const Form1 = ({ onNext, onBack, userData, setUserData }) => {
             {/* Date of Birth */}
             <div className="w-123 p-0 flex gap-2">
               <TextField
-                type="number"
+                type="text"
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                 error={touched["dob.day"] && Boolean(errors["dob.day"])}
                 onChange={(e) => {
-                  const value = e.target.value.slice(0, 2); // allow max 2 digits
+                  const value = e.target.value
+                    .replace(/[^0-9]/g, "")
+                    .slice(0, 2); // only digits, max 2
                   setUserData({
                     ...userData,
                     dob: { ...userData.dob, day: value },
@@ -111,10 +118,13 @@ const Form1 = ({ onNext, onBack, userData, setUserData }) => {
               />
 
               <TextField
-                type="number"
+                type="text"
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                 error={touched["dob.month"] && Boolean(errors["dob.month"])}
                 onChange={(e) => {
-                  const value = e.target.value.slice(0, 2); // allow max 2 digits
+                  const value = e.target.value
+                    .replace(/[^0-9]/g, "")
+                    .slice(0, 2); // only digits, max 2
                   setUserData({
                     ...userData,
                     dob: { ...userData.dob, month: value },
@@ -125,11 +135,15 @@ const Form1 = ({ onNext, onBack, userData, setUserData }) => {
                 value={userData.dob.month}
                 helperText={touched["dob.month"] && errors["dob.month"]}
               />
+
               <TextField
-                type="number"
+                type="text"
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                 error={touched["dob.year"] && Boolean(errors["dob.year"])}
                 onChange={(e) => {
-                  const value = e.target.value.slice(0, 4); // allow max 4 digits
+                  const value = e.target.value
+                    .replace(/[^0-9]/g, "")
+                    .slice(0, 4); // only digits, max 4
                   setUserData({
                     ...userData,
                     dob: { ...userData.dob, year: value },
@@ -151,7 +165,9 @@ const Form1 = ({ onNext, onBack, userData, setUserData }) => {
           disabled={!isValid}
           onClick={onNext}
           className={`cursor-pointer px-8 py-3 rounded-full w-1/3 text-2xl  font-semibold ${
-            isValid ? "bg-purple-200 text-purple-500" : "bg-gray-200 text-white cursor-not-allowed"
+            isValid
+              ? "bg-purple-200 text-purple-500"
+              : "bg-gray-200 text-white cursor-not-allowed"
           }`}
         >
           Continue

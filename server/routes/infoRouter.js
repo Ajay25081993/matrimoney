@@ -26,7 +26,7 @@ infoRouter.get('/:user_id',
 // Update Info
 infoRouter.put('/:user_id',
   userIdParamValidation,
-  updateInfoValidation,
+  // updateInfoValidation,
   handleValidationErrors,
   updateInfo
 );

@@ -37,11 +37,15 @@ const ProfilePreview = () => {
   }, []);
   return (
     <div className="bg-gray-100  w-full ">
-      <Header profilePic={userData.profilePic}/>
+      <Header profilePic={userData.profilePic} userData={userData} />
 
       <div className="flex flex-col gap-10 px-65 pt-35 w-full">
         <div className="w-5xl p-5 rounded-xl shadow-md shadow-gray-400 flex gap-5">
-          <img src={userData.profilePic} alt="" className="w-80 h-80 rounded-xl" />
+          <img
+            src={userData.profilePic}
+            alt=""
+            className="w-80 h-80 rounded-xl"
+          />
 
           <div className="space-y-6 mt-12">
             <div className="flex flex-col gap-1">

@@ -7,18 +7,21 @@ import { communities } from "./community";
 
 export default function Form2({ onNext, onBack, userData, setUserData }) {
   // Example for enabling/disabling button based on selections — you can enhance this with validation logic later
-  const isValid = userData.religion!=="Others" && userData.community!=='Others' && userData.state;
+  const isValid = userData.religion!=="Select" && userData.community!=='Select' && userData.state;
 
   return (
     <div className="">
-      <i
+      <div className="flex">
+        <i
         onClick={onBack}
         className="ri-arrow-left-long-line text-2xl cursor-pointer text-gray-500"
       ></i>
 
-      <div className="w-full flex justify-center">
+      <div className="w-full flex justify-center mr-5">
         <i className="ri-user-community-line text-green-400 w-18 h-18 text-5xl text-shadow-md text-shadow-green-300 flex justify-center items-center bg-green-200 rounded-full"></i>
       </div>
+      </div>
+      
 
       <Box
         component="form"

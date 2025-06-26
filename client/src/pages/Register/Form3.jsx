@@ -39,14 +39,17 @@ const Form3 = ({ onBack, userData, setUserData, onSubmit, registered }) => {
 
   return (
     <div>
-      <i
+      <div className="flex">
+        <i
         onClick={onBack}
         className="ri-arrow-left-long-line text-2xl cursor-pointer text-gray-500"
       ></i>
 
-      <div className="w-full flex justify-center mb-2">
+      <div className="w-full flex justify-center mb-2 mr-5">
         <i className="ri-shield-check-line text-amber-500 w-18 h-18 text-5xl text-shadow-md text-shadow-amber-400 flex justify-center items-center bg-amber-200 rounded-full"></i>
       </div>
+      </div>
+      
       <p className="w-full text-center text-xl text-gray-600">
         An active email ID & phone no. <br />
         are required to secure your Profile

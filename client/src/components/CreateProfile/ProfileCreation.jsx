@@ -7,16 +7,19 @@ import { subCommunity } from "./subCommunity";
 import { diet } from "./diet";
 import { maritalStatus } from "./maritalStatus";
 import { children } from "./Children";
-import { Link } from "@mui/material";
+import { CircularProgress, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { weights } from "./weights";
+
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { languages } from "./language";
+import axios from "axios";
 const ProfileCreation = ({ formData, setFormData }) => {
   const navigateTo = useNavigate();
   const [touched, setTouched] = useState({});
   const [isValid, setIsValid] = useState(false);
+  const [cities, setCities] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const {
       language,
@@ -54,13 +57,32 @@ const ProfileCreation = ({ formData, setFormData }) => {
 
   const showError = (field) => !formData[field]?.length && touched[field];
 
+  // Fetch cities via Axios with try-catch
+  const fetchCities = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("/data/indianCities.json");
+      console.log(response);
+
+      setCities(response.data); // assuming data is an array of city names
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCities();
+  }, []);
+
   return (
     <div className="mt-30 mb-10 w-full flex-col gap-4 flex justify-center items-center">
       <div className="shadow-sm shadow-gray-600 bg-white w-3xl rounded-md flex justify-center items-center gap-4 flex-col p-5">
         <p className="text-2xl">Let's create your profile now</p>
         <Stack
           spacing={3}
-          sx={{ width: 440, "& .MuiInputLabel-root": { fontSize: "18px" } }}
+          sx={{ width: 440, "& .MuiInputLabel-root": { fontSize: "17px" } }}
         >
           <Autocomplete
             multiple
@@ -103,21 +125,74 @@ const ProfileCreation = ({ formData, setFormData }) => {
           <div className="flex justify-center items-center flex-col gap-5">
             {/* City */}
             <TextField
-              error={showError("city") || (formData.city.length < 4 && formData.city.length!=0)}
+              error={
+                showError("city") ||
+                (formData.city.length < 4 && formData.city.length != 0)
+              }
               required
               label="City you live in?"
               value={formData.city}
-              onChange={(e) => handleChange("city", e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                // allow only letters and spaces
+                const onlyLetters = value.replace(/[^a-zA-Z\s]/g, "");
+                handleChange("city", onlyLetters);
+              }}
               onBlur={() => setTouched((prev) => ({ ...prev, city: true }))}
               variant="standard"
               helperText={
                 showError("city")
                   ? "Please enter your city"
-                  : formData.city.length < 4&& formData.city.length!=0
+                  : formData.city.length < 4 && formData.city.length != 0
                   ? "City name must be at least 4 characters"
                   : ""
               }
             />
+
+            {/* <Autocomplete
+              freeSolo
+              disableClearable
+              options={cities}
+              loading={loading}
+              value={formData.city}
+              onInputChange={(event, newValue) => {
+                // restrict to alphabet input only
+                const alphaOnly = newValue.replace(/[^a-zA-Z\s]/g, "");
+                setFormData({ ...formData, city: alphaOnly });
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="City you live in?"
+                  required
+                  variant="standard"
+                  error={
+                    showError("city") ||
+                    (formData.city.length < 4 && formData.city.length !== 0)
+                  }
+                  helperText={
+                    showError("city")
+                      ? "Please enter your city"
+                      : formData.city.length < 4 && formData.city.length !== 0
+                      ? "City name must be at least 4 characters"
+                      : ""
+                  }
+                  onBlur={() => setTouched((prev) => ({ ...prev, city: true }))}
+                  InputProps={{
+                    ...params.InputProps,
+                    type: "search",
+                    endAdornment: (
+                      <>
+                        {loading ? (
+                          <CircularProgress color="inherit" size={20} />
+                        ) : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
+                />
+              )}
+            /> */}
 
             {/* Live with Family */}
             <div className="w-full flex flex-col gap-1 px-2">

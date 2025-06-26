@@ -139,7 +139,7 @@ photoRouter.put("/delete", async (req, res) => {
       await User.update({ imageUrl: null }, { where: { id: userId } });
     } else {
       console.log("Delete");
-      
+
       await Photo.update({ [name]: null }, { where: { user_id: userId } });
     }
 

@@ -8,12 +8,11 @@ const Dashboard = ({ userData }) => {
   return (
     <div className=" flex bg-gray-100 py-6 justify-center gap-5 w-full mt-8">
       <div className="bg-white border-1 border-gray-300 rounded-md w-60 text-gray-500 space-y-2">
-        <img
-          src={userData.profilePic}
-          className="w-60 h-60 rounded-t-md"
-          alt=""
-        />
-        <div className="flex items-center w-full justify-between  cursor-pointer px-3 py-1">
+        <div className="w-60 h-60 overflow-hidden rounded-t-md">
+          <img src={userData.profilePic} className="w-full object-cover" alt="" />
+        </div>
+
+        <div className="flex items-center w-full justify-between cursor-pointer px-3 py-1">
           <p className="text-sm">
             {userData.firstName + " " + userData.lastName}
           </p>

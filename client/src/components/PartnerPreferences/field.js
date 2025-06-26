@@ -30,7 +30,7 @@ export const locationFields = [
 ];
 
 export const lookingForFields = [
-  { label: "Not Specified", value: "" },
+  { label: "About", value: "Not Specified" },
 ];
 
 export const allFields = [

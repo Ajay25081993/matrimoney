@@ -1,4 +1,5 @@
 export const communities = [
+  "Select",
   "Others",
   "Gujarati",
   "Marathi",

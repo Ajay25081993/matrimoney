@@ -74,14 +74,17 @@ export const getInfo = async (req, res) => {
   }
 };
 
+
 export const updateInfo = async (req, res) => {
   try {
-    const info = await Info.findOne({ where: { user_id: req.params.user_id } });
+    let info = await Info.findOne({ where: { user_id: req.params.user_id } });
 
     if (!info) return successResponse(res, "Info not found", [], 200);
-
-    Object.assign(info, req.body);
-    await info.save();
+    const { aboutText } = req.body;
+    
+    await info.update({
+      aboutMe: aboutText,
+    });
 
     successResponse(res, "User Info Updated", [info], 200);
   } catch (error) {
@@ -89,6 +92,7 @@ export const updateInfo = async (req, res) => {
     errorResponse(res, "Server error", [], 500);
   }
 };
+
 
 export const deleteInfo = async (req, res) => {
   try {

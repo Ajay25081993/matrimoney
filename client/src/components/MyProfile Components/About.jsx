@@ -5,7 +5,6 @@ const About = ({ userInfo }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [aboutText, setAboutText] = useState(userInfo.aboutMe || "");
 
-  
   useEffect(() => {
     setAboutText(userInfo.aboutMe || "");
   }, [userInfo.aboutMe]);
@@ -47,7 +46,7 @@ const About = ({ userInfo }) => {
       {/* Static Text */}
       {!isEditing && (
         <p className="text-gray-600 transition-opacity duration-1000 ">
-          {userInfo.aboutMe}
+          {aboutText}
         </p>
       )}
     </div>
